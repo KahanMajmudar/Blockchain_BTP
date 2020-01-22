@@ -19,4 +19,18 @@ exports.create = async(req, res) => {
 }
 
 
+exports.retrieve() = async(req, res) => {
+
+    const mnemonic = req.body.mnemonic
+    const provider = new HDWalletProvider(mnemonic,infuraUrl)
+    const web3 = new Web3(provider)
+
+    const acc = provider.getAddresses()
+
+    res.josn({
+        accounts: acc
+    })
+
+}
+
 

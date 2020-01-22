@@ -42,7 +42,11 @@ const HDWalletProvider = require("@truffle/hdwallet-provider");
 const infuraUrl = 'https://ropsten.infura.io/v3/b13045565c1947c09aad0dcb3ec43f6c'
 
 // console.log(provider)
-const web3 = new Web3(provider)
+
+// const provider = new HDWalletProvider('cruise zebra meadow nurse timber old waste improve neglect nasty trick around', infuraUrl)
+// const web3 = new Web3(provider)
+
+// console.log(provider.getAddresses())
 
 
 // create = async() => {
@@ -82,18 +86,20 @@ const web3 = new Web3(provider)
 // info()
 
 
-restore = async(mnemonic) => {
-
-    const mnemonic = mnemonic
-    // const seed = await bip39.mnemonicToSeed(mnemonic)
 
 
+// restore = async(mnemonic) => {
+
+//     const mnemonic = mnemonic
+//     // const seed = await bip39.mnemonicToSeed(mnemonic)
 
 
-    // console.log(path, smt)
-}
 
-restore()
+
+//     // console.log(path, smt)
+// }
+
+// restore()
 
 
 
