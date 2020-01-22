@@ -1,0 +1,30 @@
+How to use 3rd party node_modules
+
+i) Create node prj folder
+ii) Use npm init or npm init --yes
+iii) npm i <package name>
+iv) import <package>
+
+
+
+
+How to git
+
+i) git init
+ii) git status
+iii) create .gitignore
+  - here list files and folders(/) to ignore
+iv) git add .
+v) git commit -m "Message"
+
+
+
+List of dependencies
+
+i) npm list
+ii) npm list --depth=
+
+
+Development dependencies
+
+i) npm i <package> --save-dev

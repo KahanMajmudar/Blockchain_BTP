@@ -1,0 +1,19 @@
+{
+  "name": "ICO",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@openzeppelin/contracts": "^2.4.0",
+    "ethereumjs-tx": "^2.1.2",
+    "helmet": "^3.21.2",
+    "util": "^0.12.1",
+    "web3": "^1.2.5-rc.0"
+  }
+}
