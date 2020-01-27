@@ -1,8 +1,8 @@
-const app = require('express');
+import { Router } from 'express'
 const router = app.Router();
-const token_controller = require('../controller/token_controller');
+import { info } from '../controller/token_controller'
 
 
-router.get('/info', token_controller.info);
+router.get('/info', info);
 
 module.exports = router

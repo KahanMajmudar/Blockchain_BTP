@@ -1,7 +1,7 @@
-const mongoose = require('mongoose');
-mongoose.set('useCreateIndex', true);
-const Joi = require('@hapi/joi');
-const jwt = require('jsonwebtoken');
+import mongoose from 'mongoose'
+mongoose.set('useCreateIndex', true)
+import Joi from '@hapi/joi'
+// import jwt from 'jsonwebtoken'
 
 
 const userSchema = new mongoose.Schema({
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
         trim: true,
         minlength: 5,
         maxlength: 20
-    }, 
+    },
 
     email: {
         type: String,
@@ -41,7 +41,7 @@ const userSchema = new mongoose.Schema({
         default: false
     }
 
-})  
+})
 
 const User = mongoose.model('User', userSchema);
 

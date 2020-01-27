@@ -1,7 +1,6 @@
-const mongoose = require('mongoose');
-const Joi = require("@hapi/joi");
-
-const quizSchema = mongoose.Schema({
+import mongoose from 'mongoose'
+import Joi from '@hapi/joi'
+import quizSchema from mongoose.Schema({
 
     ques: String,
     options: [mongoose.Schema.Types.Mixed],

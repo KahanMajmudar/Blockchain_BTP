@@ -1,9 +1,9 @@
-const app = require('express');
-const router = app.Router();
-const ico_controller = require('../controller/ico_controller');
+import { Router } from 'express'
+const router = Router()
+import { buyTokens } from '../controller/ico_controller'
 
 
-router.post('/buytokens', ico_controller.buyTokens)
+router.post('/buytokens', buyTokens)
 
 
 module.exports = router

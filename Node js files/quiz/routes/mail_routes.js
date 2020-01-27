@@ -1,9 +1,9 @@
-const app = require('express');
-const router = app.Router();
-const mail_controller = require('../controller/mail_controller');
+import { Router } from 'express';
+const router = Router();
+const { confirm } = require('../controller/mail_controller');
 
 
-router.get('/confirm/:token', mail_controller.confirm);
+router.get('/confirm/:token', confirm);
 
 
 module.exports = router

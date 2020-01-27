@@ -1,6 +1,7 @@
 // const bip39 = require('bip39')
-const Web3 = require('web3')
-const HDWalletProvider = require("@truffle/hdwallet-provider");
+import Web3 from 'web3'
+import HDWalletProvider from '@truffle/hdwallet-provider'
+
 const infuraUrl = 'https://ropsten.infura.io/v3/b13045565c1947c09aad0dcb3ec43f6c'
 
 exports.create = async(req, res) => {

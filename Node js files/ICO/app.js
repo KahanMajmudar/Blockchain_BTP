@@ -1,13 +1,13 @@
-const express = require('express');
+import express, { json, urlencoded } from 'express';
 const app = express();
-const helmet = require('helmet');
+import helmet from 'helmet';
 
-const token = require('./routes/token_routes')
-const ico = require('./routes/ico_routes')
-const account = require('./routes/account_routes')
+import token from './routes/token_routes';
+import ico from './routes/ico_routes';
+import account from './routes/account_routes';
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(json());
+app.use(urlencoded({ extended: true }));
 app.use(helmet());
 
 app.use('/api/token', token)

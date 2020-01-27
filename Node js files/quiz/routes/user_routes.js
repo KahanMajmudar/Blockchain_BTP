@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
-mongoose.set('useFindAndModify', false);
-const app = require('express');
-const router = app.Router();
-const user_controller = require('../controller/user_controller');
-const admin = require('../middleware/admin_middleware');
-const verified_user = require('../middleware/user_middleware'); 
+import mongoose from 'mongoose'
+mongoose.set('useFindAndModify', false)
+import { Router } from 'express'
+const router = Router()
+import user_controller from '../controller/user_controller'
+import admin from '../middleware/admin_middleware'
+import verified_user from '../middleware/user_middleware'
 
 router.post('/createUser', user_controller.createUser);
 

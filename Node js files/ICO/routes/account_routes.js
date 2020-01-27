@@ -1,9 +1,9 @@
-const app = require('express');
-const router = app.Router();
-const acc_controller = require('../controller/account_controller');
+import { Router } from 'express'
+const router = Router()
+import { sendEthSigned } from '../controller/account_controller'
 
 
-router.post('/send', acc_controller.sendEthSigned)
+router.post('/send', sendEthSigned)
 
 
 module.exports = router

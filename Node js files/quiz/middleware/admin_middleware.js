@@ -1,4 +1,4 @@
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken'
 
 exports.admin = async function(req, res, next){
 
@@ -9,5 +9,5 @@ exports.admin = async function(req, res, next){
 
     if(!user.isAdmin) return res.status(403).send('Forbidden!!');
     next();
-   
+
 }

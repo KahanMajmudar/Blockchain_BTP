@@ -1,7 +1,7 @@
-const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
-const _ = require('lodash')
-const { User } = require('../model/user_model');
+import jwt from 'jsonwebtoken'
+import nodemailer from 'nodemailer'
+import _  from 'lodash'
+import { User } from '../model/user_model'
 
 
 
@@ -17,15 +17,15 @@ let transporter = nodemailer.createTransport({
 module.exports.verifiedMailSender = async function (token, email){
 
     try {
-        
+
         const url = `http://localhost:3000/api/mail/confirm/${token}`;
-        
+
         transporter.sendMail({
             to: email,
             from: 'quiz.test@mail.com',
             subject: 'Confirm Mail',
             html: `Please click this url to confirm your email: <a href="${url}">${url}</a>`
-    })    
+    })
 
     } catch (error) {
         console.log(error);
@@ -40,11 +40,11 @@ exports.confirm = async function(req, res){
 
         const user = jwt.verify(req.params.token, 'SecretKey');
         const user_ID = user._id;
-        const found_user = await User.findById(user_ID); 
+        const found_user = await User.findById(user_ID);
         if(!found_user) return res.status(400).send('Verification not successfull!!');
 
         await User.findByIdAndUpdate(user_ID, {
-            $set: { isVerified: true }        
+            $set: { isVerified: true }
         }, { new: true })
 
         // payload = _.pick(updated_user, ['_id', 'isAdmin', 'isVerified'])
@@ -77,7 +77,7 @@ exports.sendAnswers = async function(result, email){
             from: 'quiz.test@mail.com',
             subject: 'Your Response',
             html: `Your responses are: ${result}`
-    })   
+    })
 
     } catch (error) {
         console.log(error);
@@ -90,13 +90,13 @@ exports.sendAnswers = async function(result, email){
 async function tokenMailSender(token, email){
 
     try {
-        
+
         transporter.sendMail({
             to: email,
             from: 'quiz.test@mail.com',
             subject: 'Thanks For Verifying',
             html: `Your token is:-> ${token}, use it during login`
-    })    
+    })
 
     } catch (error) {
         console.log(error);

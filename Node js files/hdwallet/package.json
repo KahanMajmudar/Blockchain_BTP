@@ -1,5 +1,5 @@
 {
-  "name": "express-demo",
+  "name": "hdwallet-demo",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,11 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@hapi/joi": "^16.1.8",
-    "body-parser": "^1.19.0",
-    "debug": "^4.1.1",
-    "express": "^4.17.1",
-    "helmet": "^3.21.2",
-    "morgan": "^1.9.1"
+    "@truffle/hdwallet-provider": "^1.0.29",
+    "bip39": "^3.0.2",
+    "web3": "^1.2.5-rc.0"
   }
 }

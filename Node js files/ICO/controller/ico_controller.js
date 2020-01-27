@@ -1,8 +1,9 @@
-const Web3 = require('web3')
+import Web3 from 'web3'
 
 const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545')
 const web3 = new Web3(provider)
-const ico_abi = require('../abis/ico_abi')
+
+import ico_abi from '../abis/ico_abi'
 const icoContractAddress = '0xAE06b4C2528307CaE878eDFC624B18e67f5bFF66'
 
 

@@ -1,9 +1,9 @@
-const Web3 = require('web3')
-const util = require('util')
+import Web3 from 'web3'
 
 const provider = new Web3.providers.HttpProvider('HTTP://127.0.0.1:7545')
 const web3 = new Web3(provider)
-const token_abi = require('../abis/token_abi')
+
+import token_abi from '../abis/token_abi'
 const tokenContractAddress = '0xe7Cf9bCdc927D3aA5be3a9136ea998a7cc94d636'
 
 exports.info =  async (req, res) => {
