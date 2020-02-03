@@ -2,7 +2,7 @@ const Web3 = require('web3')
 // address = '0x742d35Cc6634C0532925a3b844Bc454e4438f44e' , mainnet
 // use 'http' remix for testrpc instead of 'https'
 
-const provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/b13045565c1947c09aad0dcb3ec43f6c')
+const provider = new Web3.providers.HttpProvider('https://ropsten.infura.io/v3/[key]')
 const web3 = new Web3(provider)
 
 // console.log(provider)

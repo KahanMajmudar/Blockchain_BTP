@@ -2,7 +2,7 @@
 import Web3 from 'web3'
 import HDWalletProvider from '@truffle/hdwallet-provider'
 
-const infuraUrl = 'https://ropsten.infura.io/v3/b13045565c1947c09aad0dcb3ec43f6c'
+const infuraUrl = 'https://ropsten.infura.io/v3/[key]'
 
 exports.create = async(req, res) => {
 
