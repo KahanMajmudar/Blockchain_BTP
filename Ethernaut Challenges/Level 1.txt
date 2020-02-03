@@ -1,0 +1,6 @@
+1. Contribute to the SM using contibute function
+2. Now you will have some balance in getContribution()
+3. Send nothing(around 1 to 10 wei) to the SM using default transaction
+4. Now due to this, the fallback will catch it both conditions will be satisfied
+5. Now you are the owner!!
+6. Call withdraw and enjoy!!

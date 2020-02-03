@@ -1,0 +1,34 @@
+1. Send all your tokens to someone else
+2. Your balance will now be zero
+3. Subtracting anything from it will underflow
+
+contract OverflowUnderFlow {
+    uint public zero = 0;
+    uint public max = 2**256-1;
+    
+    // zero will end up at 2**256-1
+    function underflow() public {
+        zero -= 1;
+    }
+    // max will end up at 0
+    function overflow() public {
+        max += 1;
+    }
+}
+
+4. Hugeeeeee amt of tokens!!
+
+
+
+
+Overflows are very common in solidity and must be checked for with control statements such as:
+
+if(a + c > a) {
+  a = a + c;
+}
+
+An easier alternative is to use OpenZeppelin's SafeMath library that automatically checks for overflows in all the mathematical operators. The resulting code looks like this:
+
+a = a.add(c);
+
+If there is an overflow, the code will revert.

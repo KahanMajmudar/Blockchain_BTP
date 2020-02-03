@@ -1,0 +1,6 @@
+await web3.eth.getStorageAt(contract.address, 1)
+
+
+https://medium.com/aigang-network/how-to-read-ethereum-contract-storage-44252c8af925
+
+always encrypt the data before storing!

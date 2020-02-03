@@ -1,0 +1,35 @@
+3 methods for your contract to receive ether
+
+Method 1 — via payable functions: Earlier, we discussed that the fallback function is to intentionally allow your contract to receive Ether 
+from other contracts and external wallets. But if no such payable function exists, your contract still has 2 more indirect ways of receiving funds:
+
+Method 2 — receiving mining reward: contract addresses can be designated as the recipients of mining block rewards.
+
+Method 3 — from a destroyed contract: As discussed, selfdestruct lets you designate a backup address to receive the remaining ethers 
+from the contract you are destroying.
+
+
+https://medium.com/@alexsherbuck/two-ways-to-force-ether-into-a-contract-1543c1311c56
+
+
+
+contract ForceSend{
+    
+    
+    function receiveBal() payable public{
+           
+    }
+    
+    function destruct(address payable _address) public{
+
+        selfdestruct(_address);
+    }
+    
+}
+
+
+
+In solidity, for a contract to be able to receive ether, the fallback function must be marked 'payable'.
+
+However, there is no way to stop an attacker from sending ether to a contract by self destroying. 
+Hence, it is important not to count on the invariant this.balance == 0 for any contract logic.

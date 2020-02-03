@@ -1,0 +1,2 @@
+1. Send nothing with Send Transaction and Fa1lout is fallback function, you will become the owner!!
+2. Enjoy
