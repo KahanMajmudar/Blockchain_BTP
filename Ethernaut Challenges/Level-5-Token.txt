@@ -5,7 +5,7 @@
 contract OverflowUnderFlow {
     uint public zero = 0;
     uint public max = 2**256-1;
-    
+
     // zero will end up at 2**256-1
     function underflow() public {
         zero -= 1;

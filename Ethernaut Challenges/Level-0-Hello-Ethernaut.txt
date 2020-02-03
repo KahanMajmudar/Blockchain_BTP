@@ -1,1 +1,3 @@
+pass the string as 'hello'
+
 contract.password() gives the password
