@@ -3,3 +3,4 @@ node_modules/
 git project
 *.png
 *.jpg
+!Ethernaut Challenges/*.txt
