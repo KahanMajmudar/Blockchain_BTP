@@ -1,0 +1,10 @@
+ERC20 implements 2 functions
+
+function transfer(address _to, uint256 _value) public returns (bool success)
+function transferFrom(address _from, address _to, uint256 _value) public returns (bool success)
+
+So putting a timelock on transfer doesnot stop the owner to use transferFrom. So to send,
+1. Check balance using await contract.balanceOf(player)
+2. use approve function to tell the contract to approve the send on your behalf.
+function approve(address _spender, uint256 _value) public returns (bool success) where _value = your balance
+3. exceute transferFrom and specify the _to address
