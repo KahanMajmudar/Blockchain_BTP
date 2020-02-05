@@ -1,5 +1,5 @@
 const express = require('express');
-//const config = require('config'); 
+//const config = require('config');
 // const logger = require('./logger');
 // const authenticate = require('./authenticator');
 const Joi = require('@hapi/joi');
@@ -45,7 +45,7 @@ function validateCourse(course){
     const schema = Joi.object({
 
         name: Joi.string().min(3).required()
-        
+
     });
 
     return schema.validate(course);
@@ -84,7 +84,7 @@ app.get('/api/courses/:id', (req, res) => {
         return res.status(404).send('Course doesnot exist');
 
     }
-    res.send(found);    
+    res.send(found);
 
 });
 
@@ -93,7 +93,7 @@ app.post('/api/courses', (req, res) => {
 
     const course = {
         id: courses.length + 1,
-        name: req.body.name 
+        name: req.body.name
     };
 
     const {error} = validateCourse(req.body);
@@ -102,7 +102,7 @@ app.post('/api/courses', (req, res) => {
 
         return res.send(error.details[0].message);
 
-    } 
+    }
     courses.push(course);
     res.send(course);
 
@@ -123,7 +123,7 @@ app.put('/api/courses/:id', (req, res) => {
 
         return res.send(error.details[0].message);
 
-    } 
+    }
 
     found.name = req.body.name;
     res.send(found);
@@ -142,7 +142,7 @@ app.delete('/api/courses/:id', (req, res) => {
 
     const index = courses.indexOf(found);
     courses.splice(index,1);
-    res.send(found); 
+    res.send(found);
 
 })
 

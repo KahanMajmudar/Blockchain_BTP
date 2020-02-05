@@ -25,6 +25,3 @@ test()
 //data[0] --> 0x68f7c9195bd76f3a74da465fc4c50c10416ff633e6e7947e790fb59b90aa4550
 //data[1] --> 0x496d36bdeaaf67098fe6721b0183f04c34ea416d698cc2e1869cd500a72d3d38
 //data[2] --> 0x14267767ae164e2ebdadbfd7da56918f2d176458dfa6cb43403b93d0680d680e
-
-
-foo(reallyLongArg(), omgSoManyParameters(), IShouldRefactorThis(), isThereSeriouslyAnotherOne(), noWayYouGottaBeKiddingMe());

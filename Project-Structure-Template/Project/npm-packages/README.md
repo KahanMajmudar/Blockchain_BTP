@@ -17,3 +17,8 @@ https://www.npmjs.com/package/prettier
 
 https://www.npmjs.com/package/eslint-plugin-node
 https://www.npmjs.com/package/eslint-plugin-security
+
+https://www.npmjs.com/package/faker -- generate fake data
+
+https://www.npmjs.com/package/express-rate-limit
+https://www.npmjs.com/package/express-slow-down
