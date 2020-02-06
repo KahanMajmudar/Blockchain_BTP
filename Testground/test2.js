@@ -13,3 +13,7 @@ console.log(param2)
 // console.log( web3.utils.bytesToHex( web3.utils.hexToBytes(param3).slice(0,4) ) )
 
 console.log(process.env.NODE_ENV)
+
+import _ from 'loadash'
+
+console.log(_)
