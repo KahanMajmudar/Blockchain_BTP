@@ -1,5 +1,8 @@
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
+import Handlebars from 'handlebars'
+import { promises as fs } from 'fs';
+import path from 'path'
 import _  from 'lodash'
 import { User } from '../model/user_model'
 
@@ -9,27 +12,38 @@ let transporter = nodemailer.createTransport({
     host: "smtp.mailtrap.io",
     port: 2525,
     auth: {
-        user: 'e4bddf076f94ee',
-        pass: 'b3692275fe58c9'
+        user: 'my key',
+        pass: 'my key'
   }
 });
 
-module.exports.verifiedMailSender = async function (token, email){
+
+module.exports.verifiedMailSender = async function (data){
 
     try {
 
+        const token = data.token
+        const name = data.name
+        const email = data.email
         const url = `http://localhost:3000/api/mail/confirm/${token}`;
+
+        const hbs_file = await fs.readFile(path.resolve(__dirname, '../views/verification_mail.hbs'), {encoding: 'utf-8'})
+        const template = Handlebars.compile(hbs_file)
+        const updated_template = template({
+            name: name,
+            url: url
+        })
+
 
         transporter.sendMail({
             to: email,
             from: 'quiz.test@mail.com',
             subject: 'Confirm Mail',
-            html: `Please click this url to confirm your email: <a href="${url}">${url}</a>`
+            html: updated_template
     })
 
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
     }
 }
 
@@ -64,13 +78,6 @@ exports.sendAnswers = async function(result, email){
     try {
 
         result = JSON.stringify(result, null, 10);
-        // var tr;
-        // for (var i = 0; i < result.length; i++) {
-        //     tr = $('<tr/>');
-        //     tr.append("<td>" + json[i].Question + "</td>");
-        //     tr.append("<td>" + json[i].Answer + "</td>");
-        //     $('table').append(tr);
-        // }
 
         transporter.sendMail({
             to: email,

@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import Joi from '@hapi/joi'
-import quizSchema from mongoose.Schema({
+
+const quizSchema = mongoose.Schema({
 
     ques: String,
     options: [mongoose.Schema.Types.Mixed],
@@ -27,5 +28,5 @@ function validateQuiz(quiz){
 
 }
 
-exports.Quiz = Quiz
+exports.Quiz = Quiz;
 exports.validate = validateQuiz;

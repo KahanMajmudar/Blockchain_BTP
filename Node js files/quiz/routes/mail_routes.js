@@ -1,6 +1,6 @@
 import { Router } from 'express';
 const router = Router();
-const { confirm } = require('../controller/mail_controller');
+import { confirm } from '../controller/mail_controller'
 
 
 router.get('/confirm/:token', confirm);

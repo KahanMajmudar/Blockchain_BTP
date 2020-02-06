@@ -51,9 +51,14 @@ exports.createUser  = async (req, res) =>{
         user.password = await bcrypt.hash(user.password, salt);
         await user.save();
 
-        payload = _.pick(user, ['_id']).toJSON();
+        const payload = _.pick(user, ['_id'])
         const token = auth.genAuthToken(payload);
-        mailer.verifiedMailSender(token, user.email);
+        const data = {name: user.name,
+            email: user.email,
+            token: token
+        }
+
+        mailer.verifiedMailSender(data);
         res.status(201).send(_.pick(user, ['_id','name', 'email']));
 
 
@@ -106,3 +111,6 @@ exports.deleteUser = async (req, res) => {
     }
 
 }
+
+
+
