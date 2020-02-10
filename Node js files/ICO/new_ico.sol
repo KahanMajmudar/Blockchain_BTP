@@ -1,15 +1,25 @@
-pragma solidity >=0.4.22 <0.6.0;
+pragma solidity ^0.5.8;
 
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20Detailed.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/ERC20Pausable.sol";
-//import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/TokenTimelock.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/ERC20Detailed.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/ERC20Pausable.sol";
+import "./node_modules/@openzeppelin/contracts/token/ERC20/TokenTimelock.sol";
 
-contract MyToken is ERC20, ERC20Detailed, ERC20Pausable{
+import "./node_modules/@openzeppelin/contracts/crowdsale/Crowdsale.sol";
+import "./node_modules/@openzeppelin/contracts/crowdsale/validation/CappedCrowdsale.sol";
+import "./node_modules/@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol";
+import "./node_modules/@openzeppelin/contracts/ownership/Ownable.sol";
+import "./node_modules/@openzeppelin/contracts/crowdsale/distribution/RefundablePostDeliveryCrowdsale.sol";
+import "./node_modules/@openzeppelin/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
+
+
+contract MyToken is ERC20, ERC20Detailed, ERC20Pausable {
 
     constructor(string memory name, string memory symbol, uint8 decimals, uint ICO_SUPP)
-    ERC20Detailed(name, symbol, decimals) public{
+    public ERC20Detailed(name, symbol, decimals) {
 
+        //solhint-disable-next-line mark-callable-contracts
         _mint(msg.sender, ICO_SUPP);
 
     }
@@ -17,95 +27,39 @@ contract MyToken is ERC20, ERC20Detailed, ERC20Pausable{
 }
 
 
+contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale, RefundablePostDeliveryCrowdsale, AllowanceCrowdsale, TokenTimelock {
 
-// import "./Token_Generation.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/IERC20.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/crowdsale/Crowdsale.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/crowdsale/validation/CappedCrowdsale.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/crowdsale/validation/TimedCrowdsale.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/ownership/Ownable.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/crowdsale/distribution/RefundablePostDeliveryCrowdsale.sol";
-import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
-// import "http://github.com/OpenZeppelin/openzeppelin-solidity/contracts/token/ERC20/TokenTimelock.sol";
-
-
-contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale, RefundablePostDeliveryCrowdsale, AllowanceCrowdsale{
-
-    uint _endTime;
-    uint _startTime;
-    uint ourRate;
-    // uint _lock = now+30*1 days;
-
+    uint internal ourEndTime;
+    uint internal ourStartTime;
+    uint internal ourRate;
+    uint internal userLock = now + 30*1 days;
+    uint internal teamLock = now + 365*1 days;
 
     // enum CrowdsaleStage { PreICO, ICO, Round1, Round2, Round3, SaleEnd }
     // CrowdsaleStage public stage = CrowdsaleStage.PreICO;
 
-    uint stage = 0;
+    uint internal stage = 0;
 
-    //event SaleEnded(address a);
+    constructor(uint256 rate, address payable wallet, IERC20 token, address tokenOwner, address teamAddress,
+    uint softcap, uint hardcap, uint startTime, uint endTime)
 
-    constructor(uint256 rate, address payable wallet, IERC20 token, address tokenOwner, uint softcap,  uint hardcap, uint startTime, uint endTime)
-
+    public
     Crowdsale(rate, wallet, token)
     AllowanceCrowdsale(tokenOwner)
     CappedCrowdsale(hardcap)
     RefundableCrowdsale(softcap)
-    TimedCrowdsale(startTime, endTime) public{
+    TimedCrowdsale(startTime, endTime)
+    TokenTimelock(token, teamAddress, teamLock) {
 
-        //address deployed_address = MyToken.getAddress();
-        //require(address(msg.sender) == address(deployed_address), "Owner of Token can create ICO");
-
-        require(rate > 0);
-        require(wallet != address(0));
-        require(address(token) != address(0));
         ourRate = rate;
-        _startTime = startTime;
-        _endTime = endTime;
-        applyBonus();
+        ourStartTime = startTime;
+        ourEndTime = endTime;
     }
 
-    modifier beforeEnd(){
+    function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal view {
 
-        require(now <= _endTime, "CrowdSale has Ended");
-        _;
-
-    }
-
-    modifier afterStart(){
-
-        require(now >= _startTime, "CrowdSale has not Started");
-        _;
-
-    }
-
-
-    function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal view{
-
-        // require(block.timestamp >= _lock);
+        // require(block.timestamp >= ourLock);
         super._preValidatePurchase(_beneficiary, _weiAmount);
-
-    }
-
-
-    function changeRound() public onlyOwner() beforeEnd() afterStart(){
-
-        stage = stage + 1;
-        applyBonus();
-
-    }
-
-
-    function applyBonus() internal onlyOwner() beforeEnd(){
-
-
-        if(stage == 1){
-            ourRate = ourRate*2;
-
-        }
-
-        else{
-            ourRate = ourRate/4;
-        }
 
     }
 
@@ -120,5 +74,5 @@ contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale, Refundabl
     }
 
 
-
 }
+
