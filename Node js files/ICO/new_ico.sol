@@ -27,20 +27,21 @@ contract MyToken is ERC20, ERC20Detailed, ERC20Pausable {
 }
 
 
-contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale, RefundablePostDeliveryCrowdsale, AllowanceCrowdsale, TokenTimelock {
+contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale, RefundablePostDeliveryCrowdsale, AllowanceCrowdsale {
 
-    uint internal ourEndTime;
-    uint internal ourStartTime;
-    uint internal ourRate;
-    uint internal userLock = now + 30*1 days;
-    uint internal teamLock = now + 365*1 days;
+    IERC20 private mytoken;
+    uint private ourEndTime;
+    uint private ourStartTime;
+    uint private ourRate;
+    uint private userLock = now + 30*1 days;
+    uint private teamLock = now + 365*1 days;
 
     // enum CrowdsaleStage { PreICO, ICO, Round1, Round2, Round3, SaleEnd }
     // CrowdsaleStage public stage = CrowdsaleStage.PreICO;
 
-    uint internal stage = 0;
+    uint private stage = 0;
 
-    constructor(uint256 rate, address payable wallet, IERC20 token, address tokenOwner, address teamAddress,
+    constructor(uint256 rate, address payable wallet, IERC20 token, address tokenOwner,
     uint softcap, uint hardcap, uint startTime, uint endTime)
 
     public
@@ -48,18 +49,46 @@ contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale, Refundabl
     AllowanceCrowdsale(tokenOwner)
     CappedCrowdsale(hardcap)
     RefundableCrowdsale(softcap)
-    TimedCrowdsale(startTime, endTime)
-    TokenTimelock(token, teamAddress, teamLock) {
+    TimedCrowdsale(startTime, endTime) {
 
+        mytoken = token;
         ourRate = rate;
         ourStartTime = startTime;
         ourEndTime = endTime;
     }
 
-    function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal view {
+    modifier beforeEnd() {
+        //solhint-disable-next-line not-rely-on-time
+        require(now <= ourEndTime, "CrowdSale has Ended");
+        _;
 
-        // require(block.timestamp >= ourLock);
-        super._preValidatePurchase(_beneficiary, _weiAmount);
+    }
+
+    modifier afterStart() {
+        //solhint-disable-next-line not-rely-on-time
+        require(now >= ourStartTime, "CrowdSale has not Started");
+        _;
+
+    }
+
+    function changeRound() public onlyOwner() beforeEnd() afterStart() {
+
+        stage = stage + 1;
+        applyBonus();
+
+    }
+
+
+    function applyBonus() internal onlyOwner() beforeEnd() {
+
+        require(stage < 6, "Rounds Excedded!!");
+
+        if (stage == 1) {
+            ourRate = ourRate*2;
+
+        } else {
+            ourRate = ourRate/2;
+        }
 
     }
 

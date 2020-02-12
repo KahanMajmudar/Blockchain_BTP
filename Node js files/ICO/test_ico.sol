@@ -10,7 +10,7 @@ import "./node_modules/@openzeppelin/contracts/crowdsale/validation/CappedCrowds
 import "./node_modules/@openzeppelin/contracts/crowdsale/validation/TimedCrowdsale.sol";
 import "./node_modules/@openzeppelin/contracts/ownership/Ownable.sol";
 import "./node_modules/@openzeppelin/contracts/crowdsale/distribution/RefundablePostDeliveryCrowdsale.sol";
-import "./node_modules/@openzeppelin/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
+// import "./node_modules/@openzeppelin/contracts/crowdsale/emission/AllowanceCrowdsale.sol";
 
 
 contract MyToken is ERC20, ERC20Detailed, ERC20Pausable {
@@ -27,24 +27,17 @@ contract MyToken is ERC20, ERC20Detailed, ERC20Pausable {
 
 
 contract MyICO is Ownable, Crowdsale, CappedCrowdsale, TimedCrowdsale,
-RefundablePostDeliveryCrowdsale, AllowanceCrowdsale {
+RefundablePostDeliveryCrowdsale {
 
     uint internal ourEndTime;
     uint internal ourStartTime;
     uint internal ourRate;
-    // uint ourLock = now+30*1 days;
+    uint internal stage = 1;
 
-
-    // enum CrowdsaleStage { PreICO, ICO, Round1, Round2, Round3, SaleEnd }
-    // CrowdsaleStage public stage = CrowdsaleStage.PreICO;
-
-    uint internal stage = 0;
-
-    constructor(uint256 rate, address payable wallet, IERC20 token, address tokenOwner,
+    constructor(uint256 rate, address payable wallet, IERC20 token,
     uint softcap, uint hardcap, uint startTime, uint endTime)
 
     public Crowdsale(rate, wallet, token)
-    AllowanceCrowdsale(tokenOwner)
     CappedCrowdsale(hardcap)
     RefundableCrowdsale(softcap)
     TimedCrowdsale(startTime, endTime) {
@@ -66,14 +59,6 @@ RefundablePostDeliveryCrowdsale, AllowanceCrowdsale {
         //solhint-disable-next-line not-rely-on-time
         require(now >= ourStartTime, "CrowdSale has not Started");
         _;
-
-    }
-
-
-    function _preValidatePurchase(address _beneficiary, uint256 _weiAmount) internal view {
-
-        // require(block.timestamp >= ourLock);
-        super._preValidatePurchase(_beneficiary, _weiAmount);
 
     }
 
