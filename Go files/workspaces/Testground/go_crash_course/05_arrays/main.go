@@ -22,5 +22,7 @@ func main() {
 	carArrSlice := []string{"Car_S1", "Car_S2"}
 
 	fmt.Println(carArrSlice)
+	fmt.Println(len(carArrSlice))
+	// fmt.Println(carArrSlice[i:j])
 
 }
