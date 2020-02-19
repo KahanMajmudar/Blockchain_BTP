@@ -1,0 +1,29 @@
+pragma solidity ^0.4.21;
+
+contract GuessTheNumberChallenge {
+    uint8 answer = 42;
+
+    function GuessTheNumberChallenge() public payable {
+        require(msg.value == 1 ether);
+    }
+
+    function isComplete() public view returns (bool) {
+        return address(this).balance == 0;
+    }
+
+    function guess(uint8 n) public payable {
+        require(msg.value == 1 ether);
+
+        if (n == answer) {
+            msg.sender.transfer(2 ether);
+        }
+    }
+}
+
+1. Compile the contract on Remix
+2. Now using "At Address", deploy the contract at the address displayed on your left side of the screen under the challenge name
+3. Guess function require 2 things
+    - i. n == answer
+      ii. msg.value = 1 eth
+4. Send 1 eth with n = 42 (because answer is 42, see line 4)
+5. Check the solution

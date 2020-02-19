@@ -1,0 +1,16 @@
+pragma solidity ^0.4.21;
+
+contract CallMeChallenge {
+    bool public isComplete = false;
+
+    function callme() public {
+        isComplete = true;
+    }
+}
+
+
+
+1. Compile the contract on Remix
+2. Now using "At Address", deploy the contract at the address displayed on your left side of the screen under the challenge name
+3. press on callme function on Remix
+4. Check for solution
