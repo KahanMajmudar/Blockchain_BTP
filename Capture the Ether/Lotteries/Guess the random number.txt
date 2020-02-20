@@ -1,0 +1,32 @@
+pragma solidity ^0.4.21;
+
+contract GuessTheRandomNumberChallenge {
+    uint8 answer;
+
+    function GuessTheRandomNumberChallenge() public payable {
+        require(msg.value == 1 ether);
+        answer = uint8(keccak256(block.blockhash(block.number - 1), now));
+    }
+
+    function isComplete() public view returns (bool) {
+        return address(this).balance == 0;
+    }
+
+    function guess(uint8 n) public payable {
+        require(msg.value == 1 ether);
+
+        if (n == answer) {
+            msg.sender.transfer(2 ether);
+        }
+    }
+}
+
+
+
+1. Compile the contract on Remix
+2. Now using "At Address", deploy the contract at the address displayed on your left side of the screen under the challenge name
+3. The answer is a private variable but it can still be accessed using web3
+4. Run thw Random_number.js and change the contractAddress with your contract address
+5. Convert the output from hex to decimal
+6. Send your guess with 1 ether
+7. Check the solution

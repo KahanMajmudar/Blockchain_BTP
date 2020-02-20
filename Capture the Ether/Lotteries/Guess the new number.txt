@@ -1,0 +1,31 @@
+pragma solidity ^0.4.21;
+
+contract GuessTheNewNumberChallenge {
+    function GuessTheNewNumberChallenge() public payable {
+        require(msg.value == 1 ether);
+    }
+
+    function isComplete() public view returns (bool) {
+        return address(this).balance == 0;
+    }
+
+    function guess(uint8 n) public payable {
+        require(msg.value == 1 ether);
+        uint8 answer = uint8(keccak256(block.blockhash(block.number - 1), now));
+
+        if (n == answer) {
+            msg.sender.transfer(2 ether);
+        }
+    }
+}
+
+
+1. Compile the contract on Remix
+2. Now using "At Address", deploy the contract at the address displayed on your left side of the screen under the challenge name
+3. We can send values and eth from contracts as well
+4. So run 'NewNumber.sol' and change the address inside GuessTheNewNumberChallenge()
+    - It will precompute the answer before sending it to the guess function
+    - As both will be in the same block and executed at the same time, the answer will be same
+    - The fallback will receive the funds send by the contract after successfull execution
+    - Call getEth to get the ethers back
+5. Check the solution
