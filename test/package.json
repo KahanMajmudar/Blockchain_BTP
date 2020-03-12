@@ -1,0 +1,66 @@
+{
+  "name": "bitbox-scaffold-node",
+  "version": "8.7.0",
+  "description": "Basic command line node app w/ BITBOX bindings",
+  "author": "Gabriel Cardona <gabriel@bitcoin.com>",
+  "engines": {
+    "node": ">=10.15.3"
+  },
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index.js --exec babel-node --presets @babel/preset-env",
+    "test": "nyc --reporter=text mocha --require babel-core/register --timeout 5000",
+    "coverage": "nyc report --reporter=text-lcov | coveralls",
+    "coverage:report": "nyc --reporter=html mocha --require babel-core/register --timeout 5000"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Bitcoin-com/bitbox-scaffold-node.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Bitcoin-com/bitbox-scaffold-node/issues"
+  },
+  "homepage": "https://github.com/Bitcoin-com/bitbox-scaffold-node#readme",
+  "devDependencies": {
+    "bitbox-sdk": "8.7.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.5.0",
+    "eslint-config-prettier": "^3.0.1",
+    "eslint-config-standard": "^12.0.0",
+    "eslint-plugin-prettier": "^2.6.2",
+    "eslint-plugin-promise": "^2.0.1",
+    "eslint-plugin-standard": "^4.0.0",
+    "node-mocks-http": "^1.7.0",
+    "prettier": "^1.14.2",
+    "supertest": "^2.0.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^1.0.32",
+    "axios": "^0.19.2",
+    "bip32": "^2.0.5",
+    "bip39": "^3.0.2",
+    "bitcoinjs-lib": "^5.1.7",
+    "bitcore-lib": "^8.16.0",
+    "bitcore-lib-cash": "^8.16.0",
+    "bitcore-mnemonic": "^8.16.0",
+    "bitgo-utxo-lib": "^1.8.0",
+    "blockchain.info": "^2.12.1",
+    "coininfo": "^5.1.0",
+    "coinselect": "^3.1.11",
+    "config": "^3.3.0",
+    "crypto-wallet-core": "^8.16.0",
+    "ethereumjs-tx": "^2.1.2",
+    "hdkey": "^1.1.1",
+    "human-standard-token-abi": "^2.0.0",
+    "lodash": "^4.17.15",
+    "mocha": "^5.2.0",
+    "sochain": "^1.0.3",
+    "web3": "^1.2.6",
+    "winston": "^3.2.1"
+  }
+}
