@@ -318,88 +318,88 @@
 
 // // }
 
-//   const testnet = Bitcoin.networks.testnet
-//   const mnemonic = 'ancient wine vacant climb tree boil outdoor mushroom modify strong pistol until slogan force boil away boring battle immune comfort shrimp canyon phrase cook'
-//   const seed = await bip39.mnemonicToSeed(mnemonic)
-//   const root = bip32.fromSeed(seed, testnet)
+  // const testnet = Bitcoin.networks.testnet
+  // const mnemonic = 'ancient wine vacant climb tree boil outdoor mushroom modify strong pistol until slogan force boil away boring battle immune comfort shrimp canyon phrase cook'
+  // const seed = await bip39.mnemonicToSeed(mnemonic)
+  // const root = bip32.fromSeed(seed, testnet)
 
-//   let walletAddrs = []
-//   let wif = []
+  // let walletAddrs = []
+  // let wif = []
 
-//   for(let i = 0; i < 10; i++) {
+  // for(let i = 0; i < 10; i++) {
 
-//     let childNode = root.derivePath(`m/44'/1'/0'/0/${i}`)     //test btc has path m/44'/1'/      mainnet btc has path m/44'/0'/
-//     const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: testnet})
-//     walletAddrs.push(childAddr.address)
-//     wif.push(childNode.toWIF())
-//     console.log(childNode.toWIF());
-//     console.log(childAddr.address);
+  //   let childNode = root.derivePath(`m/44'/1'/0'/0/${i}`)     //test btc has path m/44'/1'/      mainnet btc has path m/44'/0'/
+  //   const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: testnet})
+  //   walletAddrs.push(childAddr.address)
+  //   wif.push(childNode.toWIF())
+  //   console.log(childNode.toWIF());
+  //   console.log(childAddr.address);
 
-//   }
+  // }
 
 //   // const network = 'BTCTEST'
-//   const from_addr = walletAddrs[1]
-//   const to_addr = walletAddrs[0]
-//   const amt_to_sent = 11000
-//   const pk = Bitcoin.ECPair.fromWIF(wif[1], testnet)
-//   // console.log(pk);
+  // const from_addr = walletAddrs[1]
+  // const to_addr = walletAddrs[0]
+  // const amt_to_sent = 11000
+  // const pk = Bitcoin.ECPair.fromWIF(wif[1], testnet)
+  // // console.log(pk);
 
-//   const utxo = await axios.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${from_addr}?unspentOnly=true`)
-//   // console.log(utxo.data.txrefs);
+  // const utxo = await axios.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${from_addr}?unspentOnly=true`)
+  // // console.log(utxo.data.txrefs);
 
-//   if(utxo.data.txrefs == undefined) return console.log('No utxos!!')
-//   // console.log(utxo.data);
+  // if(utxo.data.txrefs == undefined) return console.log('No utxos!!')
+  // // console.log(utxo.data);
 
-//   const tx = new Bitcoin.Psbt({network: testnet})
+  // const tx = new Bitcoin.Psbt({network: testnet})
 
-//   const utxos = utxo.data.txrefs
-//   const {inputs, outputs, fee} = utxoSelector(utxos ,[{
-//     address: to_addr,
-//     value: amt_to_sent
-//   }],
-//   1)
+  // const utxos = utxo.data.txrefs
+  // const {inputs, outputs, fee} = utxoSelector(utxos ,[{
+  //   address: to_addr,
+  //   value: amt_to_sent
+  // }],
+  // 1)
 
-//   for (const res of inputs){
+  // for (const res of inputs){
 
-//     const txdata = await axios.get(`https://api.blockcypher.com/v1/btc/test3/txs/${res.tx_hash}?includeHex=true`)
+  //   const txdata = await axios.get(`https://api.blockcypher.com/v1/btc/test3/txs/${res.tx_hash}?includeHex=true`)
 
-//     tx.addInput({
-//       hash: res.tx_hash,
-//       index: res.tx_output_n,
-//       nonWitnessUtxo: Buffer.from(txdata.data.hex, 'hex')
-//     })
+  //   tx.addInput({
+  //     hash: res.tx_hash,
+  //     index: res.tx_output_n,
+  //     nonWitnessUtxo: Buffer.from(txdata.data.hex, 'hex')
+  //   })
 
-//   }
+  // }
 
-//   outputs.forEach(element => {
+  // outputs.forEach(element => {
 
-//     if(element.address == undefined){
-//       element.address = from_addr   //change address
-//       tx.addOutput({
-//         address: element.address,
-//         value: element.value
-//       })
-//     } else {
-//       tx.addOutput({
-//         address: element.address,
-//         value: element.value
-//       })
-//     }
-//   });
+  //   if(element.address == undefined){
+  //     element.address = from_addr   //change address
+  //     tx.addOutput({
+  //       address: element.address,
+  //       value: element.value
+  //     })
+  //   } else {
+  //     tx.addOutput({
+  //       address: element.address,
+  //       value: element.value
+  //     })
+  //   }
+  // });
 
-//   // console.log(tx);
+  // console.log(tx);
 
-//   inputs.forEach((element, i) => {
+  // inputs.forEach((element, i) => {
 
-//     tx.signInput(i, pk)
-//     tx.validateSignaturesOfInput(i)
-//   });
+  //   tx.signInput(i, pk)
+  //   tx.validateSignaturesOfInput(i)
+  // });
 
-//   tx.finalizeAllInputs()
+  // tx.finalizeAllInputs()
 
-//   const signedTransaction = tx.extractTransaction().toHex()
-//   // const transactionId = tx.extractTransaction().getId()
-//   console.log(signedTransaction)
+  // const signedTransaction = tx.extractTransaction().toHex()
+  // const transactionId = tx.extractTransaction().getId()
+  // console.log(signedTransaction)
   // console.log(transactionId)
 
 
@@ -551,7 +551,7 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 //     to: to_addr,
 //     value: web3.utils.numberToHex(web3.utils.toWei('0.0001', 'ether')),
 //     gasPrice: web3.utils.toHex(web3.utils.toWei('2', 'Gwei')),
-// 		gasLimit:  web3.utils.toHex('3000000')
+// 		 gasLimit:  web3.utils.toHex('3000000')
 //   }
 
 //   // console.log(txData);
@@ -653,7 +653,19 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 
 // bchsend()
 
+import * as bip32 from 'bip32'
+import * as bip39 from 'bip39'
+import coin from 'coininfo'
+import hdkey from 'hdkey'
 
+// const mnemonic = bip39.generateMnemonic(256)        //128 for 12, 256 for 24 words
+const mnemonic = 'code forum edit blur give reform pond tent okay wait person news cube hole sure animal extra purpose stand segment industry sugar answer ramp'
+const seed = bip39.mnemonicToSeedSync(mnemonic)
+console.log(seed.toString('hex'));
 
+const masterNode = bip32.fromSeed(seed)
+// const masterNode = hdkey.fromMasterSeed(seed);
+// console.log(masterNode);
 
-
+// console.log(mnemonic, '\n',  masterNode);
+// console.log(masterNode.privateKey);
