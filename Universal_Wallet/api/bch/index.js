@@ -19,7 +19,7 @@ const bitbox = new BITBOX({
 export class BCH{
 
 
-    async createWallet(network_type, strength){
+    async createAccount(network_type, strength){
 
         const mnemonic = bip39.generateMnemonic(strength)    //12 or 24?
         const rootSeed = await bip39.mnemonicToSeed(mnemonic)
@@ -49,7 +49,7 @@ export class BCH{
         );
 
         const address = bitbox.HDNode.toCashAddress(childNode)
-        const node = bitbox.HDNode.derivePath(account, `0/${index}`);
+        const node = bitbox.HDNode.derivePath(account, `${isChange}/${index}`);
         const keyPair = bitbox.HDNode.toKeyPair(node);
 
 

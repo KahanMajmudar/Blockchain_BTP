@@ -5,21 +5,16 @@ import coinSelect from 'coinselect'
 import axios from 'axios'
 import winston from 'winston'
 
-const logger = winston.createLogger({
-    transports: [
-        new winston.transports.Console(),
-    ]
-})
 
 export class BTC{
 
 
-    async createWallet(network_type, strength){
+    async createAccount(network_type, strength){
 
         const mnemonic = bip39.generateMnemonic(strength)
         // const mnemonic = 'ancient wine vacant climb tree boil outdoor mushroom modify strong pistol until slogan force boil away boring battle immune comfort shrimp canyon phrase cook'
         const seed = await bip39.mnemonicToSeed(mnemonic)
-        const root = this.masterRootSelector(seed, 'testnet')
+        const root = this.masterRootSelector(seed, network_type)
 
     }
 
@@ -39,8 +34,8 @@ export class BTC{
             const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: testnet})   //change this
             walletAddrs.push(childAddr.address)
             wif.push(childNode.toWIF())
-            logger.info(childNode.toWIF());
-            logger.info(childAddr.address);
+            console.log(childNode.toWIF());
+            console.log(childAddr.address);
 
         }
     }
@@ -83,7 +78,7 @@ export class BTC{
 
         this.addOutputs(outputs, change_address, tx);        //change_address?
 
-        logger.debug(tx);
+        console.log(tx);
 
         this.signAll(inputs, tx, pk);
 
@@ -91,8 +86,8 @@ export class BTC{
 
         const signedTransaction = tx.extractTransaction().toHex()
         const transactionId = tx.extractTransaction().getId()
-        logger.debug(signedTransaction)
-        logger.info(transactionId)
+        console.log(signedTransaction)
+        console.log(transactionId)
 
         //broadcast tx hash using 3PBP
 
@@ -146,9 +141,9 @@ export class BTC{
     utxoSelector(allUtxos, targets, feeRate){
 
         let { inputs, outputs, fee } = coinSelect(allUtxos, targets, feeRate)
-        logger.info('INPUTS-------------------\n', inputs)
-        logger.info('OUTPUTS------------------\n', outputs)
-        logger.info('FEE----------------------\n', fee)
+        console.log('INPUTS-------------------\n', inputs)
+        console.log('OUTPUTS------------------\n', outputs)
+        console.log('FEE----------------------\n', fee)
         return {inputs, outputs, fee}
 
     }
