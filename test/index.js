@@ -22,24 +22,25 @@
 
 // const lang = langs[0]
 
-// const mnemonic = 'ancient wine vacant climb tree boil outdoor mushroom modify strong pistol until slogan force boil away boring battle immune comfort shrimp canyon phrase cook'
+// const mnemonic = 'describe craft call ivory fitness link horn unlock treat what joke protect elbow smooth yellow december frown now visual impact aspect museum local talent'
+// // const mnemonic = 'ancient wine vacant climb tree boil outdoor mushroom modify strong pistol until slogan force boil away boring battle immune comfort shrimp canyon phrase cook'
 // // console.log("BIP44 $BCH Wallet");
 // // console.log(`256 bit ${lang} BIP39 Mnemonic: `, mnemonic);
 
 // const rootSeed = bip39.mnemonicToSeedSync(mnemonic);
-// console.log(rootSeed.toString('hex'));
+// // console.log(rootSeed.toString('hex'));
 // // console.log(  );
 // // const masterHDNode = bitbox.HDNode.fromSeed(rootSeed, "testnet");
 // const masterHDNode = bitbox.HDNode.fromSeed(rootSeed, 'testnet');
+// // // console.log(masterHDNode);
+
+// // const xpriv = bitbox.HDNode.toXPriv(masterHDNode);
+// // console.log(xpriv);
+
+// // const xpub = bitbox.HDNode.toXPub(masterHDNode)
+// // console.log(xpub);
+// // const masterHDNode = bip32.fromSeed(rootSeed)
 // // console.log(masterHDNode);
-
-// const xpriv = bitbox.HDNode.toXPriv(masterHDNode);
-// console.log(xpriv);
-
-// const xpub = bitbox.HDNode.toXPub(masterHDNode)
-// console.log(xpub);
-// const masterHDNode = bip32.fromSeed(rootSeed)
-// console.log(masterHDNode);
 
 // const account = bitbox.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
 // console.log(`BIP44 Account: "m/44'/145'/0'"`);
@@ -56,9 +57,14 @@
 // const change2 = bitbox.HDNode.derivePath(account, "0/4");
 // // console.log(change);
 
+
+
 // const cashAddress = bitbox.HDNode.toCashAddress(change);
 // const cashAddress2 = bitbox.HDNode.toCashAddress(change2);
+// console.log('\n\n\n\n');
 // console.log(cashAddress);
+// let keyPair = bitbox.HDNode.toKeyPair(change2);
+// console.log(keyPair, keyPair.getAddress());
 // console.log(cashAddress2);
 
 // // bitbox.Address.details(cashAddress).then(result => console.log(result))
@@ -653,19 +659,44 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 
 // bchsend()
 
-import * as bip32 from 'bip32'
-import * as bip39 from 'bip39'
-import coin from 'coininfo'
-import hdkey from 'hdkey'
+// import * as bip32 from 'bip32'
+// import * as bip39 from 'bip39'
+// import coin from 'coininfo'
+// import hdkey from 'hdkey'
 
-// const mnemonic = bip39.generateMnemonic(256)        //128 for 12, 256 for 24 words
-const mnemonic = 'code forum edit blur give reform pond tent okay wait person news cube hole sure animal extra purpose stand segment industry sugar answer ramp'
-const seed = bip39.mnemonicToSeedSync(mnemonic)
-console.log(seed.toString('hex'));
+// // const mnemonic = bip39.generateMnemonic(256)        //128 for 12, 256 for 24 words
+// const mnemonic = 'code forum edit blur give reform pond tent okay wait person news cube hole sure animal extra purpose stand segment industry sugar answer ramp'
+// const seed = bip39.mnemonicToSeedSync(mnemonic)
+// console.log(seed.toString('hex'));
 
-const masterNode = bip32.fromSeed(seed)
+// const masterNode = bip32.fromSeed(seed)
 // const masterNode = hdkey.fromMasterSeed(seed);
 // console.log(masterNode);
 
 // console.log(mnemonic, '\n',  masterNode);
 // console.log(masterNode.privateKey);
+
+
+// class A {
+
+//   method(a){
+
+//     console.log("A.method");
+//     const aa = a
+//     return a
+//   }
+
+
+// }
+
+// class B extends A {
+
+//   method2(baa){
+//     const ba = super.method(baa)
+//     console.log(ba);
+//   }
+// }
+
+// const b = new B
+// b.method2('hello')
+
