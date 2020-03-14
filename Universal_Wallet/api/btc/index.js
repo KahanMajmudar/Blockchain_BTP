@@ -4,6 +4,7 @@ import * as bip32 from 'bip32';
 import coinSelect from 'coinselect'
 import axios from 'axios'
 import winston from 'winston'
+import { Wallet } from '../wallet';
 
 
 export class BTC{
@@ -11,51 +12,50 @@ export class BTC{
 
     async createAccount(network_type, strength){
 
-        const mnemonic = bip39.generateMnemonic(strength)
-        // const mnemonic = 'ancient wine vacant climb tree boil outdoor mushroom modify strong pistol until slogan force boil away boring battle immune comfort shrimp canyon phrase cook'
+        // const mnemonic = bip39.generateMnemonic(strength)
+        const { mnemonic, seed }        // change it
         const seed = await bip39.mnemonicToSeed(mnemonic)
-        const root = this.masterRootSelector(seed, network_type)
+        const masterRoot = this.masterRootSelector(seed, network_type)
 
     }
 
-    masterRootSelector(rootSeed, network_type){
+    masterRootSelector(seed, network_type){
 
-        if (network_type == 'testnet') return bip32.fromSeed(rootSeed, Bitcoin.networks.testnet)
+        if (network_type == 'testnet') return bip32.fromSeed(seed, Bitcoin.networks.testnet)
 
-        else return bip32.fromSeed(rootSeed, Bitcoin.networks.mainnet)
+        else return bip32.fromSeed(seed, Bitcoin.networks.mainnet)
 
     }
 
-    getAddresses(root, from, to){
+    getAddresses(masterRoot, from, to){
 
         for(let i = from; i < to; i++) {
 
-            let childNode = root.derivePath(`m/44'/1'/0'/0/${i}`)   //change this     //test btc has path m/44'/1'/      //mainnet btc has path m/44'/0'/
+            let childNode = masterRoot.derivePath(`m/44'/1'/0'/0/${i}`)   //change this     //test btc has path m/44'/1'/      //mainnet btc has path m/44'/0'/
             const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: testnet})   //change this
-            walletAddrs.push(childAddr.address)
-            wif.push(childNode.toWIF())
-            console.log(childNode.toWIF());
+
             console.log(childAddr.address);
+            console.log(childNode.toWIF());
 
         }
     }
 
-    getAddressInfo(root, coin_type, account_index = 0, isChange = 0, address_index){
+    getAddressInfo(masterRoot, coin_type, account_index = 0, isChange = 0, address_index){
 
-        const childNode = root.derivePath(`m/44'/${coin_type}'/${account_index}'/${isChange}/${address_index}`)
+        const childNode = masterRoot.derivePath(`m/44'/${coin_type}'/${account_index}'/${isChange}/${address_index}`)
         const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: testnet})       //change this
 
         const address = childAddr.address
         const wif = childNode.toWIF()
 
-        return address, wif
+        return { address, wif }
 
     }
 
 
-    async send(root, address_index, to_address, amount, feeRate = 1){
+    async send(masterRoot, address_index, to_address, amount, feeRate = 1){
 
-        const {from_address, wif} = this.getAddressInfo(root, null, null, null, address_index)
+        const {from_address, wif} = this.getAddressInfo(masterRoot, null, null, null, address_index)
 
         const pk = Bitcoin.ECPair.fromWIF(wif, testnet)     //change it
 
