@@ -4,18 +4,18 @@ import * as bip32 from 'bip32';
 import coinSelect from 'coinselect'
 import axios from 'axios'
 import winston from 'winston'
-import { Wallet } from '../wallet';
 
 
 export class BTC{
 
 
-    async createAccount(network_type, strength){
+    async createAccount(mnemonic, seed, network_type){
 
         // const mnemonic = bip39.generateMnemonic(strength)
-        const { mnemonic, seed }        // change it
-        const seed = await bip39.mnemonicToSeed(mnemonic)
+        // const { mnemonic, seed }        // change it
+        // const seed = await bip39.mnemonicToSeed(mnemonic)
         const masterRoot = this.masterRootSelector(seed, network_type)
+        return masterRoot
 
     }
 
@@ -114,7 +114,7 @@ export class BTC{
 
             if (element.address == undefined) {
 
-                element.address = change_address;    //change address
+                element.address = change_address;    //change address?
                 tx.addOutput({
 
                     address: element.address,

@@ -10,9 +10,9 @@ import { Wallet } from '../wallet';
 export class ETH{
 
 
-    async createAccount(strength){
+    async createAccount(mnemonic){
 
-        const { mnemonic, seed }            //change it
+        // const { mnemonic, seed }            //change it
         const provider = new HDWalletProvider(mnemonic, infuraurl)
         const web3 = new Web3(provider)
 

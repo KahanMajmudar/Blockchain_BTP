@@ -2,24 +2,24 @@ import Web3 from 'web3'
 import * as bip39 from 'bip39'
 import abi from 'human-standard-token-abi'
 import HDWalletProvider from '@truffle/hdwallet-provider';
-import { Wallet } from '../wallet';
+// import { Wallet } from '../wallet';
+import { ETH } from '../eth';
 const infuraurl = 'https://ropsten.infura.io/v3/96453a99912a4ec4805c98db605cdcc0'
 
 
 
-export class ERC{
+export class ERC extends ETH{
 
 
-    async createAccount(strength){
+    // async createAccount(strength){
 
-        const { mnemonic, seed }        //change it
-        const provider = new HDWalletProvider(mnemonic, infuraurl)
-        const web3 = new Web3(provider)
+    //     const { mnemonic, seed }        //change it
+    //     const provider = new HDWalletProvider(mnemonic, infuraurl)
+    //     const web3 = new Web3(provider)
 
-        return walletInfo = web3.eth.accounts._provider.wallets
+    //     return walletInfo = web3.eth.accounts._provider.wallets
 
-    }
-
+    // }
     async setToken(token_address){
 
         const tokenContract = await new web3.eth.Contract(abi, token_address)

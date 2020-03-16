@@ -1,6 +1,7 @@
 import express, { json, urlencoded } from 'express'
 import helmet from 'helmet'
 import { BCH } from './api/bch'
+import { Wallet } from './api/wallet';
 
 class Server {
 
@@ -35,3 +36,17 @@ server.core();
 //     console.log(address, keyPair);
 
 // })
+
+const wallet = new Wallet()
+wallet.create(128).then(res => {
+
+	console.log('app \n', res.mnemonic);
+
+	wallet.createBCHAcc(res.mnemonic, res.seed, 'testnet').then(ress => {
+
+		console.log('app.bch', ress);
+
+	})
+
+})
+
