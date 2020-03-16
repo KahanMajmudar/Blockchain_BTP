@@ -343,7 +343,7 @@
 
   // }
 
-//   // const network = 'BTCTEST'
+  //   // const network = 'BTCTEST'
   // const from_addr = walletAddrs[1]
   // const to_addr = walletAddrs[0]
   // const amt_to_sent = 11000
@@ -700,3 +700,175 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 // const b = new B
 // b.method2('hello')
 
+import { BITBOX } from 'bitbox-sdk'
+import * as bip39 from 'bip39'
+import coinSelect from 'coinselect';
+
+const bitbox = new BITBOX({
+    restURL: 'https://trest.bitcoin.com/v2/',
+});
+
+// const mnemonic = bip39.generateMnemonic()
+const mnemonic = 'rural blood puzzle artwork plate transfer cherry flash list stock jungle cart'
+console.log('Mnemonic', mnemonic);
+const rootSeed = bip39.mnemonicToSeedSync(mnemonic);
+// console.log('Root Seed', rootSeed.toString('hex'));
+const masterHDNode = bitbox.HDNode.fromSeed(rootSeed, "testnet");
+
+// const xpriv = bitbox.HDNode.toXPriv(masterHDNode);
+// console.log(xpriv);
+
+// const xpub = bitbox.HDNode.toXPub(masterHDNode)
+// console.log(xpub);
+
+const account = bitbox.HDNode.derivePath(masterHDNode, "m/44'/145'/0'");
+
+let childNodeExternal = masterHDNode.derivePath(`m/44'/145'/0'/0/0`);
+let externalCashAddr = bitbox.HDNode.toCashAddress(childNodeExternal)
+console.log(
+  `External Cash Addr: ${externalCashAddr}`
+);
+
+let childNodeInternal = masterHDNode.derivePath(`m/44'/145'/0'/1/0`)
+let internalCashAddr = bitbox.HDNode.toCashAddress(childNodeInternal)
+console.log(
+  `Internal Cash Addr: ${internalCashAddr}`
+);
+
+const external = bitbox.HDNode.derivePath(account, "0/0");
+const internal = bitbox.HDNode.derivePath(account, "1/0");
+
+let externalKP = bitbox.HDNode.toKeyPair(external)
+let internalKP = bitbox.HDNode.toKeyPair(internal)
+
+const result1 = {
+  utxos: [
+    {
+      txid: '6cc6063d01115eb5afe6bc04c95d03228c74841aebd8deb6c4cdb578fdbaa35f',
+      vout: 1,
+      amount: 0.1,
+      satoshis: 10000000,
+      height: 1366772,
+      confirmations: 5
+    }
+  ],
+  legacyAddress: 'mqWZcbq235YSzQjBwMCv4Rj6dHFSBA5d93',
+  cashAddress: 'bchtest:qpkeu56fhl5rezg5jtx6hcm3lwpv7rrsnclsswmxll',
+  slpAddress: 'slptest:qpkeu56fhl5rezg5jtx6hcm3lwpv7rrsncyyh4p3dz',
+  scriptPubKey: '76a9146d9e5349bfe83c891492cdabe371fb82cf0c709e88ac',
+  asm: 'OP_DUP OP_HASH160 6d9e5349bfe83c891492cdabe371fb82cf0c709e OP_EQUALVERIFY OP_CHECKSIG'
+}
+
+
+const result2 = {
+  utxos: [
+    {
+      txid: '39a4148dc0dfc9b75bbd0d4f1a1fa7d4dd6f6bb8d865a3c32a7ee915b58ddeae',
+      vout: 1,
+      amount: 0.1,
+      satoshis: 10000000,
+      height: 1366773,
+      confirmations: 4
+    }
+  ],
+  legacyAddress: 'n4rHmR5YuiDu3FpxHFHdPhbdjLZ8g7gJsV',
+  cashAddress: 'bchtest:qrllxr8damaafp78q7kx2lhqy0t2h50v2qr48078jw',
+  slpAddress: 'slptest:qrllxr8damaafp78q7kx2lhqy0t2h50v2qcpq5ysqn',
+  scriptPubKey: '76a914fff30cedeefbd487c707ac657ee023d6abd1ec5088ac',
+  asm: 'OP_DUP OP_HASH160 fff30cedeefbd487c707ac657ee023d6abd1ec50 OP_EQUALVERIFY OP_CHECKSIG'
+}
+
+// console.log(externalKP, '\n\n\n\n' ,internalKP);
+
+async function send() {
+
+  // const result1 = await bitbox.Address.utxo(externalCashAddr)
+  console.log(result1.utxos);
+  console.log('R1 done');
+
+  // const result2 = await bitbox.Address.utxo(internalCashAddr)
+  console.log(result2.utxos);
+  console.log('R2 done');
+
+  let allUtxos = result1.utxos.concat(result2.utxos)
+  // console.log(allUtxos, typeof allUtxos);
+
+  allUtxos = utxoConvertor(allUtxos)
+  console.log(allUtxos);
+
+  console.log(allUtxos.length);
+
+  const {inputs, outputs, fee} = utxoSelector(allUtxos, [{
+    address: 'bchtest:qqmd9unmhkpx4pkmr6fkrr8rm6y77vckjvqe8aey35', value: 19999628}],
+  1)
+
+  let transactionBuilder = new bitbox.TransactionBuilder("testnet");
+
+  addInputs(inputs, transactionBuilder);
+
+  addOutputs(outputs, transactionBuilder);
+
+  console.log('almost there............');
+
+  let redeemScript;
+
+  transactionBuilder.sign(0, externalKP, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, 10000000)
+  transactionBuilder.sign(1, internalKP, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, 10000000)
+
+  const tx = transactionBuilder.build();
+  const tx_hex = tx.toHex();
+  console.log(`Transaction raw hex: ${tx_hex}`);
+
+}
+send()
+
+function utxoConvertor(allUtxos){
+
+  for (let i in allUtxos){
+    allUtxos[i]['value'] = allUtxos[i]['satoshis']
+  }
+  return allUtxos
+
+}
+
+function utxoSelector(allUtxos, targets, feeRate){
+
+    let { inputs, outputs, fee } = coinSelect(allUtxos, targets, feeRate)
+    console.log('INPUTS------------------\n', inputs)
+    console.log('OUTPUTS------------------\n', outputs)
+    console.log('FEE------------------\n', fee)
+    return {inputs, outputs, fee}
+}
+
+
+function addOutputs(outputs, transactionBuilder) {
+  outputs.forEach(element => {
+    // console.log(element);
+    if (!element.address) {
+      element.address = cashAddress2;
+      transactionBuilder.addOutput(element.address, element.value);
+      console.log('inside');
+    }
+    else {
+      transactionBuilder.addOutput(element.address, element.value);
+      console.log('outside');
+    }
+  });
+}
+
+function addInputs(inputs, transactionBuilder) {
+  inputs.forEach(element => {
+    // console.log(element);
+    transactionBuilder.addInput(element.txid, element.vout);
+    console.log('added');
+  });
+}
+
+function signAll(inputs, transactionBuilder, keyPair, redeemScript) {
+  inputs.forEach((element, i) => {
+    transactionBuilder.sign(i, keyPair, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, element.value);
+  });
+}
+/*
+02000000025fa3bafd78b5cdc4b6ded8eb1a84748c22035dc904bce6afb55e11013d06c66c010000006a47304402206abd288433dfce5c28d8c4e29327c05bd17bed54d95d82f6e22f8d768d870981022055e554fb6e01b1324ba695c74259a7004be63cd9982eb41ee11b232fbd1bd064412102a9f7c28093f033a299fdb8cc5a7b4e5f0e80e0e1eb3c9070a2fc0a7f95d1a561ffffffffaede8db515e97e2ac3a365d8b86b6fddd4a71f1a4f0dbd5bb7c9dfc08d14a439010000006b483045022100ba6256c193e4edbb367263164293cd851c8d779b61d387912cff2219988af6ac02205fb660e5fba6d18dafa190bf7242d8f04e4809be07faf3522603b6c4f23c33f7412102b147ec671c126528a993097fde1d93c8e03e4ebc96b8f15063bc8916044b3c21ffffffff018c2b3101000000001976a91436d2f27bbd826a86db1e93618ce3de89ef33169388ac00000000
+*/
