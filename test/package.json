@@ -55,6 +55,7 @@
     "config": "^3.3.0",
     "crypto-wallet-core": "^8.16.0",
     "ethereumjs-tx": "^2.1.2",
+    "ethereumjs-wallet": "^0.6.3",
     "hdkey": "^1.1.1",
     "human-standard-token-abi": "^2.0.0",
     "lodash": "^4.17.15",
