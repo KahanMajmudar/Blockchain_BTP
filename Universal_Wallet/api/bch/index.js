@@ -34,10 +34,10 @@ export class BCH{
         }
     }
 
-    getAddressInfo(masterHDNode, from_account_index = 0, isChange = 0, address_index){
+    getAddressInfo(masterHDNode, account_index = 0, isChange = 0, address_index){
 
-        const account = masterHDNode.derivePath(`m/44'/145'/${from_account_index}'`)
-        const childNode = masterHDNode.derivePath(`m/44'/145'/${from_account_index}'/${isChange}/${address_index}`)
+        const account = masterHDNode.derivePath(`m/44'/145'/${account_index}'`)
+        const childNode = masterHDNode.derivePath(`m/44'/145'/${account_index}'/${isChange}/${address_index}`)
 
         const address = bitbox.HDNode.toCashAddress(childNode)
         const node = bitbox.HDNode.derivePath(account, `${isChange}/${address_index}`);
@@ -54,9 +54,9 @@ export class BCH{
 
     }
 
-    async send(masterHDNode, from_account_index = 0, from_index, to_address, amount, feeRate){
+    async send(masterHDNode, from_account_index = 0, from_address_index, to_address, amount, feeRate){
 
-        let {address: from_address, keyPair} = this.getAddressInfo(masterHDNode, from_account_index, false, from_index)   //change this
+        let {address: from_address, keyPair} = this.getAddressInfo(masterHDNode, from_account_index, false, from_address_index)   //change this
 
         const result = await bitbox.Address.utxo(from_address)
 
@@ -122,7 +122,7 @@ export class BCH{
         });
     }
 
-    buildTx(inputs, masterHDNode, from_account_index, outputs) {
+    buildTx(masterHDNode, inputs, from_account_index, outputs) {
 
         let transactionBuilder = new bitbox.TransactionBuilder("testnet") //change this
         this.addInputs(inputs, transactionBuilder)

@@ -40,24 +40,27 @@ export class BTC{
         }
     }
 
-    getAddressInfo(masterRoot, coin_type, account_index = 0, isChange = 0, address_index){
+    getAddressInfo(masterRoot, coin_type = 0, account_index = 0, isChange = 0, address_index){
+
+        let network_type
+        if (coin_type == 0) network_type = Bitcoin.networks.bitcoin
+        else network_type = Bitcoin.networks.testnet
 
         const childNode = masterRoot.derivePath(`m/44'/${coin_type}'/${account_index}'/${isChange}/${address_index}`)
-        const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: testnet})       //change this
+        const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: network_type})       //change this
 
         const address = childAddr.address
         const wif = childNode.toWIF()
+        const pk = Bitcoin.ECPair.fromWIF(wif, network_type)
 
-        return { address, wif }
+        return { address, pk, network_type }
 
     }
 
 
     async send(masterRoot, address_index, to_address, amount, feeRate = 1){
 
-        const {from_address, wif} = this.getAddressInfo(masterRoot, null, null, null, address_index)
-
-        const pk = Bitcoin.ECPair.fromWIF(wif, testnet)     //change it
+        const {from_address, pk, network_type} = this.getAddressInfo(masterRoot, null, null, null, address_index)
 
         const utxo = await axios.get(`https://api.blockcypher.com/v1/btc/test3/addrs/${from_address}?unspentOnly=true`)
         // console.log(utxo.data.txrefs);
@@ -65,7 +68,7 @@ export class BTC{
         if(utxo.data.txrefs == undefined) return console.log('No utxos!!')
         // console.log(utxo.data);
 
-        const tx = new Bitcoin.Psbt({network: testnet})         //change this
+        const tx = new Bitcoin.Psbt({network: network_type})         //change this
 
         const utxos = utxo.data.txrefs
         const {inputs, outputs, fee} = this.utxoSelector(utxos ,[{
