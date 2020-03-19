@@ -11,29 +11,30 @@ const web3 = new Web3(
 
 export class ETH{
 
+    #root
+    #mnemonic
 
     async createAccount(mnemonic, seed){
 
-        // const { mnemonic, seed }            //change it
-        // const provider = new HDWalletProvider(mnemonic, infuraurl)
-        const root = hdkey.fromMasterSeed(seed)
-        return root
+        this.#mnemonic = mnemonic
+        this.#root = hdkey.fromMasterSeed(seed)
+        // return root
 
     }
 
-    getAddresses(root, from, to){
+    getAddresses(account_index = 0, from = 0, to = 10){
 
         for (let i = from; i <= to; i++){
 
-            const child = root.derivePath(`m/44'/60'/0'/0/${i}`).getWallet()
-            console.log('0x' + child.getAddress().toString('hex'))
+            const child = this.#root.derivePath(`m/44'/60'/${account_index}'/0/${i}`).getWallet()
+            console.log(`0x${child.getAddress().toString('hex')}`)
         }
 
     }
 
-    getAddressInfo(root, address_index){
+    getAddressInfo(address_index){
 
-        const child = root.derivePath(`m/44'/60'/0'/0/${address_index}`).getWallet()
+        const child = this.#root.derivePath(`m/44'/60'/0'/0/${address_index}`).getWallet()
         const address = `0x${child.getAddress().toString('hex')}`
         const privateKey = `0x${child.getPrivateKey().toString('hex')}`
 
@@ -41,9 +42,9 @@ export class ETH{
 
     }
 
-    async send(root, from_address_index, to_address, amount, network_type){
+    async send(from_address_index, to_address, amount, network_type){
 
-        const { address: from_address, privateKey } = this.getAddressInfo(root, from_address_index)
+        const { address: from_address, privateKey } = this.getAddressInfo(this.#root, from_address_index)
 
         const nonce = await web3.eth.getTransactionCount(from_address, 'pending')
         const txData = {

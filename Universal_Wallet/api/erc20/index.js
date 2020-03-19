@@ -4,26 +4,28 @@ import abi from 'human-standard-token-abi'
 import HDWalletProvider from '@truffle/hdwallet-provider';
 // import { Wallet } from '../wallet';
 import { ETH } from '../eth';
-const infuraurl = 'https://ropsten.infura.io/v3/96453a99912a4ec4805c98db605cdcc0'
+const infuraurl = 'https://ropsten.infura.io/v3/my-key'
 
 
 
 export class ERC extends ETH{
 
+    #tokenContract
 
     async setToken(token_address){
 
-        const tokenContract = await new web3.eth.Contract(abi, token_address)
-        return tokenContract
+        this.#tokenContract = await new web3.eth.Contract(abi, token_address)
+        // return tokenContract
     }
 
-    async send(tokenContract, from_address, to_address, amount){
+    async send(from_address_index, to_address, amount){
 
-        const amount_to_send =  web3.utils.toBN(amount)
-        const decimals = await tokenContract.methods.decimals().call()
-        const actual_amount = amount_to_send.mul(web3.utils.toBN(10).pow(decimals))  //amt * 10^decimals
+        const bn_amount =  web3.utils.toBN(amount)
+        const decimals = await this.#tokenContract.methods.decimals().call()
+        const amount_to_send = bn_amount.mul(web3.utils.toBN(10).pow(decimals))  //amt * 10^decimals
 
-        const result = await tokenContract.methods.transfer(to_address, actual_amount).send({from: from_address})
+        const { address: from_address} = this.getAddressInfo(from_address_index)
+        const result = await this.#tokenContract.methods.transfer(to_address, amount_to_send).send({from: from_address})
 
     }
 
