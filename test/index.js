@@ -934,3 +934,24 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 //   const child = root.derivePath(`m/44'/60'/0'/0/${i}`).getWallet()
 //   console.log(`0x${child.getAddress().toString('hex')}`)
 // }
+
+// class Something {
+//   #property;
+
+//   constructor(){
+//     this.#property = "test";
+//   }
+
+//   #privateMethod() {
+//     return 'hello world';
+//   }
+
+//   getPrivateMessage() {
+//     return this.#privateMethod();
+//   }
+// }
+
+// const instance = new Something();
+// console.log(instance.property); //=> undefined
+// console.log(instance.privateMethod); //=> undefined
+// console.log(instance.getPrivateMessage()); //=> hello world
