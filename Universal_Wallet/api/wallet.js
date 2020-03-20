@@ -4,6 +4,18 @@ import { BCH } from './bch'
 import { BTC } from './btc'
 import { ETH } from './eth'
 
+// const currencies = {
+
+//     BCH,
+//     BTC,
+//     ETH
+// }
+
+// class DynamicClass {
+//     constructor (className, opts) {
+//         return new currencies[className](opts);
+//     }
+// }
 
 export class Wallet{
 
@@ -15,45 +27,118 @@ export class Wallet{
     |  224  |  7 |   231  |  21  |
     |  256  |  8 |   264  |  24  |
     */
-    async init(strength){
-
-        const mnemonic = bip39.generateMnemonic(strength)
-        const seed = await bip39.mnemonicToSeed(mnemonic)
-        const hexSeed = seed.toString('hex')
-
-        // console.log(seed.toString('hex'));
-        return { mnemonic, seed }
+    constructor() {
+        this.bch = {}
+        this.btc = {}
+        this.eth = {}
     }
 
-    async recover(mnemonic){
+    init = async(req, res) => {
 
+        const strength = req.body.strength
+        const mnemonic = bip39.generateMnemonic(strength)
+        this.seed = await bip39.mnemonicToSeed(mnemonic)
+        // const hexSeed = seed.toString('hex')
+        res.json({
+            mnemonic,
+        })
+        // console.log(seed.toString('hex'));
+        // return { mnemonic, seed }
+    }
+
+    recover = async(req, res) => {
+
+        const mnemonic = req.body.mnemonic
         const isValid = bip39.validateMnemonic(mnemonic)
         if (!isValid) return console.log('Invalid Mnemonic!!')
 
-        seed = await bip39.mnemonicToSeed(mnemonic)
-        return { mnemonic, seed }
+        this.seed = await bip39.mnemonicToSeed(mnemonic)
+        // console.log(this.seed)
+        // const hexSeed = seed.toString('hex')
+        res.json({
+            mnemonic
+        })
+        // return { mnemonic, seed }
 
     }
 
-    async createBCHAcc(_mnemonic, _seed, _network_type){
+    createBCHAcc = (req, res) => {
 
-        const bch = new BCH(_mnemonic, _seed, _network_type)
-        return bch
+        const _mnemonic = req.body.mnemonic
+        const _network_type = req.body.network_type
+        const _seed = this.seed
+        // console.log('inside wallet\n', _mnemonic, _seed, _network_type)
+        this.bch = new BCH(_mnemonic, _seed, _network_type)
+        res.send('Success!!')
+        // return bch
+
+    }
+
+    getBCHAddresses = (req, res) => {
+
+        const account = req.body.account
+        const from = req.body.from
+        const to = req.body.to
+        const address = this.bch.getAddresses(account, from, to)
+        // console.log('wallet', address)
+        res.send(address)
+    }
+
+    getBCHAddressInfo = (req, res) => {
+
+        const account = req.body.account
+        const change = req.body.change
+        const address_index = req.params.id
+        const { address, pk } = this.bch.getAddressInfo(account, change, address_index)
+        res.json({
+            address,
+            pk
+        })
+    }
+
+    createBTCAcc = async(req, res) => {
+
+        const _mnemonic = req.body.mnemonic
+        const _network_type = req.body.network_type
+        const _seed = this.seed
+        this.btc = new BTC(_mnemonic, _seed, _network_type)
+        res.send('Success!!')
+    }
+
+    createETHAcc = async(_network_type) => {
+
+        const _mnemonic = req.body.mnemonic
+        const _seed = this.seed
+        this.eth = new ETH(_mnemonic, _seed)
+        res.send('Success!!')
 
     }
 
-    async createBTCAcc(_mnemonic, _seed, _network_type){
+    //not working
+    // createAccount = (req, res) => {
 
-        const btc = new BTC(_mnemonic, _seed, _network_type)
-        return btc
-    }
+    //     const type = req.params.currency
+    //     const _mnemonic = req.body.mnemonic
+    //     const _network_type = req.body.network_type
+    //     const _seed = this.seed
+    //     console.log(type)
+    //     this.type = new DynamicClass(`'${type.toUpperCase}'`, _mnemonic, _seed, _network_type)
 
-    async createETHAcc(_network_type){
+    //     res.send("Done")
 
-        const eth = new ETH()
-        const info = await eth.createAccount(_mnemonic)
-        return info
 
-    }
+    // }
+
+    // getAddresses = (req, res) => {
+
+    //     const type = req.params.currency
+    //     const account = req.body.account
+    //     const from = req.body.from
+    //     const to = req.body.to
+    //     const address = window[`this.${type}.getAddresses`](account, from, to)
+    //     res.send(address)
+    // }
 
 }
+
+

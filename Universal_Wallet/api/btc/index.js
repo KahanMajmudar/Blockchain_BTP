@@ -8,38 +8,38 @@ import winston from 'winston'
 
 export class BTC{
 
-    #masterRoot
-    #network_type
-    #mnemonic
+    // #masterRoot
+    // #network_type
+    // #mnemonic
 
-    constructor(mnemonic, seed, network_type){
+    constructor(_mnemonic, _seed, _network_type){
 
-        this.#mnemonic = mnemonic
-        this.#network_type = network_type
-        this.#masterRoot = this.masterRootSelector(seed, this.#network_type)
+        this.mnemonic = _mnemonic
+        this.network_type = _network_type
+        this.masterRoot = this.masterRootSelector(_seed, this.network_type)
         // return masterRoot
     }
 
-    masterRootSelector(seed){
+    masterRootSelector = (seed) => {
 
-        if (this.#network_type == 'testnet'){
+        if (this.network_type == 'testnet'){
 
-            this.#network_type = Bitcoin.networks.testnet
-            return this.#masterRoot = bip32.fromSeed(seed, this.#network_type)
+            this.network_type = Bitcoin.networks.testnet
+            return this.masterRoot = bip32.fromSeed(seed, this.network_type)
 
         }
 
         else {
 
-            this.#network_type = Bitcoin.networks.mainnet
-            return this.#masterRoot = bip32.fromSeed(seed, this.#network_type)
+            this.network_type = Bitcoin.networks.mainnet
+            return this.masterRoot = bip32.fromSeed(seed, this.network_type)
         }
 
     }
 
-    getCointype(){
+    getCointype = () => {
 
-        if (this.#network_type == Bitcoin.networks.testnet) return 1
+        if (this.network_type == Bitcoin.networks.testnet) return 1
 
         else return 0
 
@@ -51,36 +51,36 @@ export class BTC{
      * @param {Number} [from = 0] - 1st address index
      * @param {Number} [to = 0] - last address index
      */
-    getAddresses(from_account_index = 0, from = 0, to = 10){
+    getAddresses = (from_account_index = 0, from = 0, to = 10) => {
 
         for(let i = from; i < to; i++) {
 
             const coin_type = this.getCointype()
-            let childNode = this.#masterRoot.derivePath(`m/44'/${coin_type}'/${from_account_index}'/0/${i}`)   //change this     //test btc has path m/44'/1'/      //mainnet btc has path m/44'/0'/
-            const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: this.#network_type})   //change this
+            let childNode = this.masterRoot.derivePath(`m/44'/${coin_type}'/${from_account_index}'/0/${i}`)   //change this     //test btc has path m/44'/1'/      //mainnet btc has path m/44'/0'/
+            const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: this.network_type})   //change this
 
             console.log(childAddr.address);
 
         }
     }
 
-    getAddressInfo(account_index = 0, isChange = 0, address_index){
+    getAddressInfo = (account_index = 0, isChange = 0, address_index) => {
 
         const coin_type = this.getCointype()
-        const childNode = this.#masterRoot.derivePath(`m/44'/${coin_type}'/${account_index}'/${isChange}/${address_index}`)
-        const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: this.#network_type})       //change this
+        const childNode = this.masterRoot.derivePath(`m/44'/${coin_type}'/${account_index}'/${isChange}/${address_index}`)
+        const childAddr = Bitcoin.payments.p2pkh({pubkey: childNode.publicKey, network: this.network_type})       //change this
 
         const address = childAddr.address
         const wif = childNode.toWIF()
-        const keyPair = Bitcoin.ECPair.fromWIF(wif, this.#network_type)
-        console.log(this.#network_type)
+        const keyPair = Bitcoin.ECPair.fromWIF(wif, this.network_type)
+        console.log(this.network_type)
 
         return { address, keyPair }
 
     }
 
 
-    async send(address_index, to_address, amount, feeRate = 1){
+    send = async(address_index, to_address, amount, feeRate = 1) => {
 
         const { address: from_address, keyPair: pk } = this.getAddressInfo(null, null, null, address_index)
 
@@ -90,7 +90,7 @@ export class BTC{
         if(utxo.data.txrefs == undefined) return console.log('No utxos!!')
         // console.log(utxo.data);
 
-        const tx = new Bitcoin.Psbt({network: this.#network_type})         //change this
+        const tx = new Bitcoin.Psbt({network: this.network_type})         //change this
 
         const utxos = utxo.data.txrefs
         const {inputs, outputs, fee} = this.utxoSelector(utxos ,[{
@@ -119,7 +119,7 @@ export class BTC{
 
     }
 
-    async addinputs(inputs, tx) {
+    addinputs = async(inputs, tx) => {
 
         for (const res of inputs) {
 
@@ -133,7 +133,7 @@ export class BTC{
         }
     }
 
-    addOutputs(outputs, change_address, tx) {
+    addOutputs = (outputs, change_address, tx) => {
 
         outputs.forEach(element => {
 
@@ -156,14 +156,14 @@ export class BTC{
         });
     }
 
-    signAll(inputs, tx, pk) {
+    signAll = (inputs, tx, pk) => {
         inputs.forEach((_element, i) => {
             tx.signInput(i, pk);
             tx.validateSignaturesOfInput(i);
         });
     }
 
-    utxoSelector(allUtxos, targets, feeRate){
+    utxoSelector = (allUtxos, targets, feeRate) => {
 
         let { inputs, outputs, fee } = coinSelect(allUtxos, targets, feeRate)
         console.log('INPUTS-------------------\n', inputs)

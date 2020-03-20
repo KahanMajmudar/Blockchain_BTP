@@ -9,42 +9,48 @@ const web3 = new Web3(
 )
 
 
-export class ETH{
+export class ETH {
 
-    #root
-    #mnemonic
+    // #root
+    // #mnemonic
 
-    async createAccount(mnemonic, seed){
+    constructor(_mnemonic, _seed) {
 
-        this.#mnemonic = mnemonic
-        this.#root = hdkey.fromMasterSeed(seed)
+        this.mnemonic = _mnemonic
+        this.root = hdkey.fromMasterSeed(_seed)
         // return root
 
     }
 
-    getAddresses(account_index = 0, from = 0, to = 10){
+    getAddresses = (account_index = 0, from = 0, to = 10) => {
 
-        for (let i = from; i <= to; i++){
+        for (let i = from; i <= to; i++) {
 
-            const child = this.#root.derivePath(`m/44'/60'/${account_index}'/0/${i}`).getWallet()
+            const child = this.root.derivePath(`m/44'/60'/${account_index}'/0/${i}`).getWallet()
             console.log(`0x${child.getAddress().toString('hex')}`)
         }
 
     }
 
-    getAddressInfo(address_index){
+    getAddressInfo = (address_index) => {
 
-        const child = this.#root.derivePath(`m/44'/60'/0'/0/${address_index}`).getWallet()
+        const child = this.root.derivePath(`m/44'/60'/0'/0/${address_index}`).getWallet()
         const address = `0x${child.getAddress().toString('hex')}`
         const privateKey = `0x${child.getPrivateKey().toString('hex')}`
 
-        return { address, privateKey }
+        return {
+            address,
+            privateKey
+        }
 
     }
 
-    async send(from_address_index, to_address, amount, network_type){
+    send = async (from_address_index, to_address, amount, network_type) => {
 
-        const { address: from_address, privateKey } = this.getAddressInfo(this.#root, from_address_index)
+        const {
+            address: from_address,
+            privateKey
+        } = this.getAddressInfo(this.root, from_address_index)
 
         const nonce = await web3.eth.getTransactionCount(from_address, 'pending')
         const txData = {
@@ -52,10 +58,12 @@ export class ETH{
             to: to_address,
             value: web3.utils.numberToHex(web3.utils.toWei(amount, 'ether')),
             gasPrice: web3.utils.toHex(web3.utils.toWei('2', 'Gwei')),
-            gasLimit:  web3.utils.toHex('3000000')
+            gasLimit: web3.utils.toHex('3000000')
         }
 
-        const tx = new Tx.Transaction(txData, {'chain': network_type})      //change this
+        const tx = new Tx.Transaction(txData, {
+            'chain': network_type
+        }) //change this
         tx.sign(privateKey)
         const serializedTx = tx.serialize()
         console.log(`0x${serializedTx.toString('hex')}`)

@@ -12,62 +12,69 @@ const bitbox = new BITBOX({
 
 export class BCH{
 
-    #masterHDNode
-    #network_type
-    #mnemonic
+    // #masterHDNode
+    // #network_type
+    // #mnemonic
 
-    constructor(mnemonic, seed, network_type){
+    constructor(_mnemonic, _seed, _network_type){
 
-        this.#mnemonic = mnemonic
-        this.#network_type = network_type
-        this.#masterHDNode = this.masterNodeSelector(seed, this.#network_type)
-        const rootKey = bitbox.HDNode.toXPriv(this.#masterHDNode);
+        // console.log('inside bch \n', mnemonic, seed, network_type)
+        this.mnemonic = _mnemonic
+        this.network_type = _network_type
+        this.masterHDNode = this.masterNodeSelector(_seed, this.network_type)
+        const rootKey = bitbox.HDNode.toXPriv(this.masterHDNode);
         // console.log('bchhhhhhhhhhhhh', rootKey)
     }
 
-    masterNodeSelector(rootSeed){
+    masterNodeSelector = (rootSeed) => {
 
-        if (this.#network_type == 'testnet') {
+        if (this.network_type == 'testnet') {
 
-            this.#network_type = coin.bitcoincash.test
+            this.network_type = coin.bitcoincash.test
             return bitbox.HDNode.fromSeed(rootSeed, 'testnet')
-            // return bip32.fromSeed(rootSeed, this.#network_type)
+            // return bip32.fromSeed(rootSeed, this.network_type)
         }
 
         else {
-            this.#network_type = coin.bitcoincash.main
+            this.network_type = coin.bitcoincash.main
             return bitbox.HDNode.fromSeed(rootSeed, 'mainnet')
-            // return bip32.fromSeed(rootSeed, this.#network_type)
+            // return bip32.fromSeed(rootSeed, this.network_type)
         }
     }
 
-    getAddresses(from_account_index = 0, from = 0, to = 10){
+    getAddresses = (from_account_index = 0, from = 0, to = 10) => {
 
+        console.log(from , to)
         // console.logmasterHDNode);
-        for (let i = from; i < to; i++) {
-            let childNode = this.#masterHDNode.derivePath(`m/44'/145'/${from_account_index}'/0/${i}`);
+        let address = {}
+        for (let i = from; i <= to; i++) {
+            let childNode = this.masterHDNode.derivePath(`m/44'/145'/${from_account_index}'/0/${i}`);
+            address[`address-${i}`] = bitbox.HDNode.toCashAddress(childNode)
             console.log(
-              `${bitbox.HDNode.toCashAddress(childNode)}`
+              `${address[i]}`
             );
         }
+
+        return address
     }
 
-    getAddressInfo(account_index = 0, isChange = 0, address_index){
+    getAddressInfo = (account_index = 0, isChange = 0, address_index) => {
 
-        const account = this.#masterHDNode.derivePath(`m/44'/145'/${account_index}'`)
-        const childNode = this.#masterHDNode.derivePath(`m/44'/145'/${account_index}'/${isChange}/${address_index}`)
+        const account = this.masterHDNode.derivePath(`m/44'/145'/${account_index}'`)
+        const childNode = this.masterHDNode.derivePath(`m/44'/145'/${account_index}'/${isChange}/${address_index}`)
 
         const address = bitbox.HDNode.toCashAddress(childNode)
         const node = bitbox.HDNode.derivePath(account, `${isChange}/${address_index}`);
         const keyPair = bitbox.HDNode.toKeyPair(node);
+        const pk = keyPair.toWIF().toString('hex')
 
-        return { address, keyPair }
+        return { address, pk, keyPair }
     }
 
 
-    async send(from_account_index = 0, from_address_index, to_address, amount, feeRate){
+    send = async(from_account_index = 0, from_address_index, to_address, amount, feeRate) => {
 
-        let {address: from_address, keyPair} = this.getAddressInfo(from_account_index, 0, from_address_index)   //change this
+        let {address: from_address, pk, keyPair} = this.getAddressInfo(from_account_index, 0, from_address_index)   //change this
 
         const result = await bitbox.Address.utxo(from_address)
 
@@ -91,7 +98,7 @@ export class BCH{
 
     }
 
-    utxoConvertor(allUtxos){
+    utxoConvertor = (allUtxos) => {
 
         for (let i in allUtxos){
             allUtxos[i]['value'] = allUtxos[i]['satoshis']
@@ -100,7 +107,7 @@ export class BCH{
 
     }
 
-    utxoSelector(allUtxos, targets, feeRate = 1){
+    utxoSelector = (allUtxos, targets, feeRate = 1) => {
 
         let { inputs, outputs, fee } = coinSelect(allUtxos, targets, feeRate)
         console.log('info', 'INPUTS-------------------\n', inputs)
@@ -110,7 +117,7 @@ export class BCH{
     }
 
 
-    addInputs(inputs, transactionBuilder) {
+    addInputs = (inputs, transactionBuilder) => {
         inputs.forEach(element => {
 
             transactionBuilder.addInput(element.txid, element.vout);
@@ -118,7 +125,7 @@ export class BCH{
         });
     }
 
-    addOutputs(outputs, change_address, transactionBuilder) {
+    addOutputs = (outputs, change_address, transactionBuilder) => {
         outputs.forEach(element => {
 
             if (!element.address) {
@@ -133,9 +140,9 @@ export class BCH{
         });
     }
 
-    buildTx(inputs, from_account_index, outputs) {
+    buildTx = (inputs, from_account_index, outputs) => {
 
-        let transactionBuilder = new bitbox.TransactionBuilder(this.#network_type) //change this
+        let transactionBuilder = new bitbox.TransactionBuilder(this.network_type) //change this
         this.addInputs(inputs, transactionBuilder)
         console.log('info', 'done.....maybe.........')
 
@@ -147,14 +154,14 @@ export class BCH{
     }
 
 
-    signAll(inputs, transactionBuilder, keyPair, redeemScript) {
+    signAll = (inputs, transactionBuilder, keyPair, redeemScript) => {
         inputs.forEach((element, i) => {
             transactionBuilder.sign(i, keyPair, redeemScript, transactionBuilder.hashTypes.SIGHASH_ALL, element.value);
     });
     }
 
 
-    async sendTx(transactionBuilder) {
+    sendTx = async(transactionBuilder) => {
 
         const tx = transactionBuilder.build()
         const tx_hex = tx.toHex()
