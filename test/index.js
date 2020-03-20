@@ -885,6 +885,8 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 
 //   let gap = 0
 //   let i = 0
+//   let last = 0
+//   const address = []
 
 //   while(gap <= 20){
 
@@ -904,12 +906,22 @@ f1b31625b178d37a9aedfb8213f423793d4fd334a87afad55a8ea0101e7922d2
 //     else {
 //       console.log('~~found~~')
 //       console.log(childNodeCashAddr)
+//       last = i
 //       gap = 0
 //       i++
 //     }
 
+//     for (let j = 0; j <= last; j++){
+//       let childNodeExternal = masterHDNode.derivePath(`m/44'/145'/0'/0/${i}`)
+//       let childNodeCashAddr = bitbox.HDNode.toCashAddress(childNodeExternal)
+//       address[i] = childNodeCashAddr
+//     }
+//     console.log('Your account addresses are:')
+//     console.log(address)
 //   }
 // }
+
+
 // import * as bip39 from 'bip39'
 // import Web3 from 'web3'
 // import hdkey from 'ethereumjs-wallet/hdkey'
