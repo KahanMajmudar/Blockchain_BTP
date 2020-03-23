@@ -1,6 +1,6 @@
 import { Router } from 'express'
 // import { WalletController } from '../controllers/wallet_controller'
-import { Wallet } from '../wallet'
+import { Wallet } from './wallet'
 const router = Router()
 
 const wallet = new Wallet()
@@ -9,7 +9,7 @@ const wallet = new Wallet()
 
 //CREATE Wallet
 router.post('/create', wallet.init)
-router.post('/create/:currency/account', wallet.createAccount)
+// router.post('/create/:currency/account', wallet.createAccount)
 //RETRIEVE Wallet
 router.post('/recover', wallet.recover)
 // //CREATE Account (bch, btc, eth)

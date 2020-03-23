@@ -1,11 +1,10 @@
 import * as bip32 from 'bip32'
 import * as bip39 from 'bip39'
-import { BCH } from './bch'
-import { BTC } from './btc'
-import { ETH } from './eth'
+import { BCH } from '../api/bch'
+import { BTC } from '../api/btc'
+import { ETH } from '../api/eth'
 
 // const currencies = {
-
 //     BCH,
 //     BTC,
 //     ETH
@@ -17,7 +16,7 @@ import { ETH } from './eth'
 //     }
 // }
 
-export class Wallet{
+export class Wallet {
 
     /*
      Strength               Word
@@ -28,9 +27,9 @@ export class Wallet{
     |  256  |  8 |   264  |  24  |
     */
     constructor() {
-        this.bch = {}
-        this.btc = {}
-        this.eth = {}
+        this.bch
+        this.btc
+        this.eth
     }
 
     init = async(req, res) => {
@@ -66,9 +65,10 @@ export class Wallet{
 
         const _mnemonic = req.body.mnemonic
         const _network_type = req.body.network_type
-        const _seed = this.seed
+        const _seed = this.seed //|| await bip39.mnemonicToSeed(_mnemonic)
         // console.log('inside wallet\n', _mnemonic, _seed, _network_type)
         this.bch = new BCH(_mnemonic, _seed, _network_type)
+        console.log(this.bch)
         res.send('Success!!')
         // return bch
 

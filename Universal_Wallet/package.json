@@ -11,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "@truffle/hdwallet-provider": "^1.0.31",
     "axios": "^0.19.2",
+    "bcryptjs": "^2.4.3",
     "bip32": "^2.0.5",
     "bip39": "^3.0.2",
     "bitbox-sdk": "^8.11.2",
@@ -22,8 +24,12 @@
     "config": "^3.3.0",
     "ethereumjs-tx": "^2.1.2",
     "express": "^4.17.1",
+    "handlebars": "^4.7.3",
     "helmet": "^3.21.3",
     "human-standard-token-abi": "^2.0.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.9.5",
+    "nodemailer": "^6.4.6",
     "web3": "^1.2.6",
     "winston": "^3.2.1"
   },
