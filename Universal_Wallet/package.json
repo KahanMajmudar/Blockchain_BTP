@@ -28,6 +28,7 @@
     "helmet": "^3.21.3",
     "human-standard-token-abi": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
+    "lodash": "^4.17.15",
     "mongoose": "^5.9.5",
     "nodemailer": "^6.4.6",
     "web3": "^1.2.6",

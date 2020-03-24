@@ -4,6 +4,7 @@ import mongoose from 'mongoose'
 import walletRoutes from './wallet/wallet_routes'
 import userRoutes from './users/user_routes'
 import mailRoutes from './mail/mail_routes'
+import middlewareRoutes from './api/middlewares/middleware_routes'
 
 class Server {
 
@@ -22,6 +23,7 @@ class Server {
 		this.app.use('/wallet', walletRoutes)
 		this.app.use('/user', userRoutes)
 		this.app.use('/mail', mailRoutes)
+		this.app.use('/auth', middlewareRoutes)
 		this.app.listen(this.port, () => console.log(`Listening on port ${this.port}`))
 	}
 

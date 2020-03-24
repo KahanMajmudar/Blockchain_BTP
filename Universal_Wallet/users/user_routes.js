@@ -1,7 +1,6 @@
 import { Router } from 'express'
 import { User } from '../users/user'
 const router = Router()
-
 const user = new User()
 
 
