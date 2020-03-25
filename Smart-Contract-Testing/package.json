@@ -16,5 +16,9 @@
     "solc": "^0.6.4",
     "truffle": "^5.1.18",
     "web3": "^1.2.6"
+  },
+  "devDependencies": {
+    "truffle-assertions": "^0.9.2",
+    "@openzeppelin/test-helpers": "^0.5.5"
   }
 }
