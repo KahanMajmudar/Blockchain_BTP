@@ -12,6 +12,16 @@ const {
     constants
 } = require('@openzeppelin/test-helpers');
 
+/**
+ * Notes
+ * Note that you have to use eql() (deep equality) instead of equal() when comparing BigNumbers
+ * or you'll get confusing errors like BN<1> is not equal to BN<1>.
+ *
+ * toString() for BN (Truffle 5.x / web3 1.x)
+ *
+ * truffle test --show-events to see fired events
+ *
+*/
 
 contract("Tether Token", async accounts => {
 
@@ -54,7 +64,7 @@ contract("Tether Token", async accounts => {
         maximumFee = await token.maximumFee()
         blackTransferAmt = blackTokenAmt.mul(web3.utils.toBN(10).pow(await token.decimals()))
 
-        console.log('----------------------------------Called-------------------------')
+        console.log('----------------------------------Called----------------------------------')
 
     })
 
@@ -108,7 +118,7 @@ contract("Tether Token", async accounts => {
             const AlphaBalAfter = await token.balanceOf(Alpha)
             const diffValue = AlphaBalAfter - AlphaBalBefore
             assert(AlphaBalAfter > AlphaBalBefore)
-            // expect(diffValue.toString()).to.be.bignumber.equal(transferAmt)
+            // expect(transferAmt).to.be.bignumber.eql(diffValue)
             assert.equal(transferAmt.toString(), diffValue.toString())
 
         })
@@ -173,7 +183,6 @@ contract("Tether Token", async accounts => {
             })
 
             const isPaused = await token.paused()
-            console.log(isPaused)
             assert(isPaused == false)
 
         })
