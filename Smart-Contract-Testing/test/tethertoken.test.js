@@ -9,7 +9,8 @@ chai.should()
 const truffleAssert = require('truffle-assertions')
 const {
     BN,
-    constants
+    constants,
+    expectEvent
 } = require('@openzeppelin/test-helpers');
 
 /**
@@ -95,13 +96,40 @@ contract("Tether Token", async accounts => {
 
     })
 
-    describe('Token Transfer to Owner', () => {
+    describe('Token functionalities of Owner', () => {
         it('has total supply same as balance of owner', async() => {
             const totalSupp = await token.totalSupply();
-            const ownerBalance = await token.balanceOf(accounts[0]);
+            const ownerBalance = await token.balanceOf(owner);
             expect(ownerBalance).to.be.bignumber.equal(totalSupp);
             // assert.equal(totalSupp.toString(), ownerBalance.toString())
         });
+
+        it('has the functionality to check who the owner is', async() => {
+            assert.equal(await token.getOwner(), owner)
+        })
+
+        it('has the functionality to change owner only by the current owner', async() => {
+            const newOwner = await token.transferOwnership(Alpha, {
+                from: owner
+            })
+            assert.equal(await token.getOwner(), Alpha)
+        })
+
+        it('has the functionality to change owner only by the current owner', async() => {
+            const newOwner = await token.transferOwnership(owner, {
+                from: Alpha
+            })
+            assert.equal(await token.getOwner(), owner)
+        })
+
+        it('cannot change owner by other users', async() => {
+            truffleAssert.reverts(
+                token.transferOwnership(Bravo, {
+                    from: notOwner
+                })
+            )
+
+        })
     });
 
     describe('Token core functionalities', () => {
@@ -144,6 +172,10 @@ contract("Tether Token", async accounts => {
             await token.approve(Charlie, transferAmt, {
                 from: Bravo
             })
+
+            const remains = await token.allowance(Bravo, Charlie)
+            assert.equal(remains.toString(), transferAmt.toString())
+
             await token.transferFrom(Bravo, Alpha, transferAmt, {
                 from: Charlie
             })
@@ -154,6 +186,11 @@ contract("Tether Token", async accounts => {
             const diffValue = BravoBalBefore - BravoBalAfter
             // expect(diffValue.toString()).to.be.bignumber.equal(transferAmt)
             assert.equal(transferAmt.toString(), diffValue.toString())
+        })
+
+        it('has the functionality to check allowance of tokens by the user', async() => {
+            const remains = await token.allowance(Bravo, Charlie)
+            assert.equal(remains.toString(), new BN(0).toString())
         })
 
         it('has the functionality of pausing the transfers', async() => {
@@ -300,6 +337,11 @@ contract("Tether Token", async accounts => {
             )
         })
 
+        it('can allow users to view their black list status', async() => {
+            const isBlackListed = await token.getBlackListStatus(Delta)
+            assert.equal(isBlackListed, true)
+        })
+
         it('can destroy funds of blacklisted address by owner', async() => {
             const _totalSuppBefore = await token.totalSupply()
             const deltaBalBefore = await token.balanceOf(Delta)
@@ -358,6 +400,15 @@ contract("Tether Token", async accounts => {
                 })
             )
 
+        })
+    })
+
+    describe('Deprecate features', async() => {
+        it('can set new contract address and depricate current one by the owner', async() => {
+            await token.deprecate(constants.ZERO_ADDRESS, {
+                from: owner
+            })
+            assert.equal(await token.upgradedAddress(), constants.ZERO_ADDRESS)
         })
     })
 

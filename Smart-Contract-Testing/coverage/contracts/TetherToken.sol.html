@@ -20,28 +20,28 @@
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">78.3% </span>
+        <span class="strong">87.74% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>83/106</span>
+        <span class='fraction'>93/106</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">56.67% </span>
+        <span class="strong">60% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>34/60</span>
+        <span class='fraction'>36/60</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">81.82% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>27/33</span>
+        <span class='fraction'>33/33</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">79.09% </span>
+        <span class="strong">88.18% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>87/110</span>
+        <span class='fraction'>97/110</span>
       </div>
     </div>
   </div>
-  <div class='status-line medium'></div>
+  <div class='status-line high'></div>
 <pre><table class="coverage">
 <tr><td class="line-count quiet">1
 2
@@ -552,8 +552,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24×</span>
-<span class="cline-any cline-yes">14×</span>
+<span class="cline-any cline-yes">29×</span>
+<span class="cline-any cline-yes">17×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -561,8 +561,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -710,7 +710,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -764,11 +764,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">3×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -871,18 +871,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
+<span class="cline-any cline-yes">1×</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1010,9 +1010,9 @@ contract Ownable {
     * @dev Allows the current owner to transfer control of the contract to a newOwner.
     * @param newOwner The address to transfer ownership to.
     */
-<span class="fstat-no" title="function not covered" >    function transferOwnership(address newOwner) public onlyOwne</span>r {
-<span class="cstat-no" title="statement not covered" >        if (newOwner != address(0)) {</span>
-<span class="cstat-no" title="statement not covered" >            owner = newOwner</span>;
+    function transferOwnership(address newOwner) public onlyOwner {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (newOwner != address(0)) {
+            owner = newOwner;
         }
     }
 &nbsp;
@@ -1159,8 +1159,8 @@ contract StandardToken is BasicToken, ERC20 {
     * @param _spender address The address which will spend the funds.
     * @return A uint specifying the amount of tokens still available for the spender.
     */
-<span class="fstat-no" title="function not covered" >    function allowance(address _owner, address _spender) public constant returns (uint remaining</span>) {
-<span class="cstat-no" title="statement not covered" >        return allowed[_owner][_spender];</span>
+    function allowance(address _owner, address _spender) public constant returns (uint remaining) {
+        return allowed[_owner][_spender];
     }
 &nbsp;
 }
@@ -1213,12 +1213,12 @@ contract Pausable is Ownable {
 contract BlackList is Ownable, BasicToken {
 &nbsp;
     /////// Getters to allow the same blacklist to be used also by other contracts (including upgraded Tether) ///////
-<span class="fstat-no" title="function not covered" >    function getBlackListStatus(address _maker) external constant returns (bool</span>) {
-<span class="cstat-no" title="statement not covered" >        return isBlackListed[_maker];</span>
+    function getBlackListStatus(address _maker) external constant returns (bool) {
+        return isBlackListed[_maker];
     }
 &nbsp;
-<span class="fstat-no" title="function not covered" >    function getOwner() external constant returns (address</span>) {
-<span class="cstat-no" title="statement not covered" >        return owner;</span>
+    function getOwner() external constant returns (address) {
+        return owner;
     }
 &nbsp;
     mapping (address =&gt; bool) public isBlackListed;
@@ -1320,19 +1320,19 @@ contract TetherToken is Pausable, StandardToken, BlackList {
     }
 &nbsp;
     // Forward ERC20 methods to upgraded contract if this one is deprecated
-<span class="fstat-no" title="function not covered" >    function allowance(address _owner, address _spender) public constant returns (uint remaining</span>) {
-<span class="cstat-no" title="statement not covered" >        if (deprecated) {</span>
+    function allowance(address _owner, address _spender) public constant returns (uint remaining) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (deprecated) {
 <span class="cstat-no" title="statement not covered" >            return StandardToken(upgradedAddress).allowance(_owner, _spender);</span>
         } else {
-<span class="cstat-no" title="statement not covered" >            return super.allowance(_owner, _spender);</span>
+            return super.allowance(_owner, _spender);
         }
     }
 &nbsp;
     // deprecate current contract in favour of a new one
-<span class="fstat-no" title="function not covered" >    function deprecate(address _upgradedAddress) public onlyOwne</span>r {
-<span class="cstat-no" title="statement not covered" >        deprecated = true</span>;
-<span class="cstat-no" title="statement not covered" >        upgradedAddress = _upgradedAddress</span>;
-<span class="cstat-no" title="statement not covered" >        Deprecate(_upgradedAddress)</span>;
+    function deprecate(address _upgradedAddress) public onlyOwner {
+        deprecated = true;
+        upgradedAddress = _upgradedAddress;
+        Deprecate(_upgradedAddress);
     }
 &nbsp;
     // deprecate current contract if favour of a new one
@@ -1399,7 +1399,7 @@ contract TetherToken is Pausable, StandardToken, BlackList {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Thu Mar 26 2020 12:32:57 GMT+0530 (India Standard Time)
+  generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Fri Mar 27 2020 14:17:16 GMT+0530 (India Standard Time)
 </div>
 </div>
 <script src="../prettify.js"></script>

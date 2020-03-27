@@ -1,5 +1,7 @@
 /**
  *Submitted for verification at Etherscan.io on 2017-11-28
+ *sudo docker run -v $(pwd):/tmp mythril/myth analyze /home/file.sol --solv 0.4.25
+ *sudo docker run -v $(pwd)/contracts:/contracts/contracts slither:latest slither /contracts/file.sol
 */
 
 pragma solidity ^0.4.17;
