@@ -1,7 +1,7 @@
 /**
  *Submitted for verification at Etherscan.io on 2017-11-28
  *sudo docker run -v $(pwd):/tmp mythril/myth analyze /home/file.sol --solv 0.4.25
- *sudo docker run -v $(pwd)/contracts:/contracts/contracts slither:latest slither /contracts/file.sol
+ *sudo docker run -v $(pwd)/contracts:/contracts slither:latest slither /contracts/file.sol
 */
 
 pragma solidity ^0.4.17;
@@ -51,7 +51,7 @@ contract Ownable {
       * @dev The Ownable constructor sets the original `owner` of the contract to the sender
       * account.
       */
-    function Ownable() public {
+    constructor() public {          //change to constructor instead of function
         owner = msg.sender;
     }
 
@@ -135,9 +135,9 @@ contract BasicToken is Ownable, ERC20Basic {
         balances[_to] = balances[_to].add(sendAmount);
         if (fee > 0) {
             balances[owner] = balances[owner].add(fee);
-            Transfer(msg.sender, owner, fee);
+            emit Transfer(msg.sender, owner, fee);                //included `emit` keyword
         }
-        Transfer(msg.sender, _to, sendAmount);
+        emit Transfer(msg.sender, _to, sendAmount);             //included `emit` keyword
     }
 
     /**
@@ -171,7 +171,7 @@ contract StandardToken is BasicToken, ERC20 {
     * @param _value uint the amount of tokens to be transferred
     */
     function transferFrom(address _from, address _to, uint _value) public onlyPayloadSize(3 * 32) {
-        var _allowance = allowed[_from][msg.sender];
+        uint _allowance = allowed[_from][msg.sender];        //change to uint instead of var
 
         // Check is not needed because sub(_allowance, _value) will already throw if this condition is not met
         // if (_value > _allowance) throw;
@@ -188,9 +188,9 @@ contract StandardToken is BasicToken, ERC20 {
         balances[_to] = balances[_to].add(sendAmount);
         if (fee > 0) {
             balances[owner] = balances[owner].add(fee);
-            Transfer(_from, owner, fee);
+            emit Transfer(_from, owner, fee);                           //included `emit` keyword
         }
-        Transfer(_from, _to, sendAmount);
+        emit Transfer(_from, _to, sendAmount);                         //included `emit` keyword
     }
 
     /**
@@ -199,7 +199,6 @@ contract StandardToken is BasicToken, ERC20 {
     * @param _value The amount of tokens to be spent.
     */
     function approve(address _spender, uint _value) public onlyPayloadSize(2 * 32) {
-
         // To change the approve amount you first have to reduce the addresses`
         //  allowance to zero by calling `approve(_spender, 0)` if it is not
         //  already 0 to mitigate the race condition described here:
@@ -207,7 +206,7 @@ contract StandardToken is BasicToken, ERC20 {
         require(!((_value != 0) && (allowed[msg.sender][_spender] != 0)));
 
         allowed[msg.sender][_spender] = _value;
-        Approval(msg.sender, _spender, _value);
+        emit Approval(msg.sender, _spender, _value);                    //included `emit` keyword
     }
 
     /**
@@ -255,7 +254,7 @@ contract Pausable is Ownable {
    */
   function pause() onlyOwner whenNotPaused public {
     paused = true;
-    Pause();
+    emit Pause();                                       //included `emit` keyword
   }
 
   /**
@@ -263,7 +262,7 @@ contract Pausable is Ownable {
    */
   function unpause() onlyOwner whenPaused public {
     paused = false;
-    Unpause();
+    emit Unpause();                                         //included `emit` keyword
   }
 }
 
@@ -282,12 +281,12 @@ contract BlackList is Ownable, BasicToken {
 
     function addBlackList (address _evilUser) public onlyOwner {
         isBlackListed[_evilUser] = true;
-        AddedBlackList(_evilUser);
+        emit AddedBlackList(_evilUser);                             //included `emit` keyword
     }
 
     function removeBlackList (address _clearedUser) public onlyOwner {
         isBlackListed[_clearedUser] = false;
-        RemovedBlackList(_clearedUser);
+        emit RemovedBlackList(_clearedUser);                         //included `emit` keyword
     }
 
     function destroyBlackFunds (address _blackListedUser) public onlyOwner {
@@ -295,7 +294,7 @@ contract BlackList is Ownable, BasicToken {
         uint dirtyFunds = balanceOf(_blackListedUser);
         balances[_blackListedUser] = 0;
         _totalSupply -= dirtyFunds;
-        DestroyedBlackFunds(_blackListedUser, dirtyFunds);
+        emit DestroyedBlackFunds(_blackListedUser, dirtyFunds);        //included `emit` keyword
     }
 
     event DestroyedBlackFunds(address _blackListedUser, uint _balance);
@@ -329,7 +328,7 @@ contract TetherToken is Pausable, StandardToken, BlackList {
     // @param _name Token Name
     // @param _symbol Token symbol
     // @param _decimals Token decimals
-    function TetherToken(uint _initialSupply, string _name, string _symbol, uint _decimals) public {
+    constructor(uint _initialSupply, string _name, string _symbol, uint _decimals) public {         //change to constructor instead of function
         _totalSupply = _initialSupply;
         name = _name;
         symbol = _symbol;
@@ -389,7 +388,7 @@ contract TetherToken is Pausable, StandardToken, BlackList {
     function deprecate(address _upgradedAddress) public onlyOwner {
         deprecated = true;
         upgradedAddress = _upgradedAddress;
-        Deprecate(_upgradedAddress);
+        emit Deprecate(_upgradedAddress);                           //included `emit` keyword
     }
 
     // deprecate current contract if favour of a new one
@@ -411,7 +410,7 @@ contract TetherToken is Pausable, StandardToken, BlackList {
 
         balances[owner] += amount;
         _totalSupply += amount;
-        Issue(amount);
+        emit Issue(amount);                                         //included `emit` keyword
     }
 
     // Redeem tokens.
@@ -425,7 +424,7 @@ contract TetherToken is Pausable, StandardToken, BlackList {
 
         _totalSupply -= amount;
         balances[owner] -= amount;
-        Redeem(amount);
+        emit Redeem(amount);                                         //included `emit` keyword
     }
 
     function setParams(uint newBasisPoints, uint newMaxFee) public onlyOwner {
@@ -436,7 +435,7 @@ contract TetherToken is Pausable, StandardToken, BlackList {
         basisPointsRate = newBasisPoints;
         maximumFee = newMaxFee.mul(10**decimals);
 
-        Params(basisPointsRate, maximumFee);
+        emit Params(basisPointsRate, maximumFee);                        //included `emit` keyword
     }
 
     // Called when new token are issued
