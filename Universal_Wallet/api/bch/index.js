@@ -50,10 +50,12 @@ export class BCH{
         for (let i = from; i <= to; i++) {
             let childNode = this.masterHDNode.derivePath(`m/44'/145'/${from_account_index}'/0/${i}`);
             address[`address-${i}`] = bitbox.HDNode.toCashAddress(childNode)
-            console.log(
-              `${address[i]}`
-            );
+            // console.log(
+            //   `inside bch main ---------------${address[i]}`
+            // );
         }
+
+        console.log('inside bch ---------', address)
 
         return address
     }

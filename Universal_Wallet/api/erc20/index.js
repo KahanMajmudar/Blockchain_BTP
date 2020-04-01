@@ -5,7 +5,9 @@ import HDWalletProvider from '@truffle/hdwallet-provider';
 // import { Wallet } from '../wallet';
 import { ETH } from '../eth';
 const infuraurl = 'https://ropsten.infura.io/v3/my-key'
-
+const web3 = new Web3(
+    new Web3.providers.HttpProvider(infuraurl)
+)
 
 
 export class ERC extends ETH{

@@ -5,6 +5,7 @@ import walletRoutes from './wallet/wallet_routes'
 import userRoutes from './users/user_routes'
 import mailRoutes from './mail/mail_routes'
 import middlewareRoutes from './api/middlewares/middleware_routes'
+import { ErrorService } from './services/error'
 
 class Server {
 
@@ -13,6 +14,7 @@ class Server {
 		this.app = app
 		this.mongodb()
 		this.init()
+		this.error = new ErrorService()
     }
 
 	init() {
@@ -24,6 +26,25 @@ class Server {
 		this.app.use('/user', userRoutes)
 		this.app.use('/mail', mailRoutes)
 		this.app.use('/auth', middlewareRoutes)
+		this.app.use(async (err, req, res, next) => {
+			const isOperationalError = this.error.handleError({
+				res: res,
+				err: err.description,
+				data: {
+					type: err.commonType,
+					bool: err.isOperational
+				}
+			});
+			if (!isOperationalError) {
+				next(err);
+			}
+		})
+		// process.on('uncaughtException', err => {
+		// 	throw err
+		// })
+		// process.on('unhandledRejection', err => {
+		// 	throw err
+		// })
 		this.app.listen(this.port, () => console.log(`Listening on port ${this.port}`))
 	}
 
@@ -43,38 +64,3 @@ class Server {
 const app = express()
 const server = new Server(3000, app)
 // server.init()
-
-
-// const wallet = new Wallet()
-// wallet.create(128).then(res => {
-
-// 	console.log('app \n', res.mnemonic)
-
-// 	wallet.createBCHAcc(res.mnemonic, res.seed, 'testnet').then(ress => {
-
-// 		// console.log('app.bch', ress)
-
-// 		ress.getAddresses(0, 0, 5)
-
-// 		// const {address, keyPair} = ress.getAddressInfo(0, 0, 5)
-// 		// console.log(address, keyPair)
-
-
-// 	})
-
-
-// 	wallet.createBTCAcc(res.mnemonic, res.seed, 'testnet').then(ress => {
-
-// 		// console.log(ress)
-
-// 		// console.log(ress.getCointype())
-// 		ress.getAddresses()
-
-// 		// const {address, keyPair} = ress.getAddressInfo(0, 0, 0)
-
-// 		// console.log(address, keyPair)
-
-// 	})
-
-// })
-
