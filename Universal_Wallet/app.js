@@ -26,13 +26,12 @@ class Server {
 		this.app.use('/user', userRoutes)
 		this.app.use('/mail', mailRoutes)
 		this.app.use('/auth', middlewareRoutes)
-		this.app.use(async (err, req, res, next) => {
+		this.app.use( (err, req, res, next) => {
 			const isOperationalError = this.error.handleError({
 				res: res,
 				err: err.description,
 				data: {
-					type: err.commonType,
-					bool: err.isOperational
+					type: err.commonType
 				}
 			});
 			if (!isOperationalError) {

@@ -3,6 +3,7 @@ import * as bip39 from 'bip39'
 import { BCH } from '../api/bch'
 import { BTC } from '../api/btc'
 import { ETH } from '../api/eth'
+import { WaletValidate } from './wallet_model'
 
 // const currencies = {
 //     BCH,
@@ -34,9 +35,11 @@ export class WalletController {
 
     init = async(strength) => {
 
+        const {error} = WaletValidate.init({strength})
+        if(error) throw error
+
         const mnemonic = bip39.generateMnemonic(strength)
         this.seed = await bip39.mnemonicToSeed(mnemonic)
-
         return {mnemonic}
     }
 
@@ -47,15 +50,20 @@ export class WalletController {
 
         this.seed = await bip39.mnemonicToSeed(mnemonic)
 
-        return mnemonic
+        return {mnemonic}
 
     }
 
-    createBCHAcc = (_mnemonic, _network_type) => {
+    createBCHAcc = (mnemonic, network_type) => {
 
-        const _seed = this.seed //|| await bip39.mnemonicToSeed(_mnemonic)
-        // console.log('wallet control seed', _seed)
-        this.bch = new BCH(_mnemonic, _seed, _network_type)
+        const {error} = WaletValidate.create({mnemonic, network_type})
+        if(error) throw error
+
+        const isValid = bip39.validateMnemonic(mnemonic)
+        if (!isValid) return console.log('Invalid Mnemonic!!')
+
+        const _seed = this.seed                             //|| await bip39.mnemonicToSeed(mnemonic)
+        this.bch = new BCH(mnemonic, _seed, network_type)
 
     }
 
@@ -74,16 +82,16 @@ export class WalletController {
         }
     }
 
-    createBTCAcc = async(_mnemonic, _network_type) => {
+    createBTCAcc = async(mnemonic, network_type) => {
 
         const _seed = this.seed
-        this.btc = new BTC(_mnemonic, _seed, _network_type)
+        this.btc = new BTC(mnemonic, _seed, network_type)
     }
 
-    createETHAcc = async(_mnemonic) => {
+    createETHAcc = async(mnemonic) => {
 
         const _seed = this.seed
-        this.eth = new ETH(_mnemonic, _seed)
+        this.eth = new ETH(mnemonic, _seed)
 
     }
 

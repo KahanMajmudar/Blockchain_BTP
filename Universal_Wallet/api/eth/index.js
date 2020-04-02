@@ -62,12 +62,12 @@ export class ETH {
         }
 
         const tx = new Tx.Transaction(txData, {
-            'chain': network_type
+            'chain': network_type === 'testnet' ? 'ropsten' : 'mainnet'
         }) //change this
         tx.sign(privateKey)
         const serializedTx = tx.serialize()
         console.log(`0x${serializedTx.toString('hex')}`)
-        await web3.eth.sendSignedTransaction(`0x${serializedTx.toString('hex')}`).on('receipt', console.log)
+        await web3.eth.sendSignedTransaction(`0x${serializedTx.toString('hex')}`).on('receipt', res.send)
 
     }
 

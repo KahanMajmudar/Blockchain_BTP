@@ -14,7 +14,7 @@ export class Wallet {
             const result = await this.walletcontroller.init(strength)
             res.json(result)
         } catch (error) {
-            const err = new ErrorService('error', error, true)
+            const err = new ErrorService('error', error, true)      //improve all
             next(err)
         }
     }
@@ -27,12 +27,17 @@ export class Wallet {
 
     }
 
-    createBCHAcc = (req, res) => {
+    createBCHAcc = (req, res, next) => {
 
-        const _mnemonic = req.body.mnemonic
-        const _network_type = req.body.network_type
-        this.walletcontroller.createBCHAcc(_mnemonic, _network_type)
-        res.send('Success BCH!!')
+        try {
+            const mnemonic = req.body.mnemonic
+            const network_type = req.body.network_type
+            this.walletcontroller.createBCHAcc(mnemonic, network_type)
+            res.send('Success BCH!!')
+        } catch (error) {
+            const err = new ErrorService('error', error, true)
+            next(err)
+        }
     }
 
     getBCHAddresses = (req, res) => {
