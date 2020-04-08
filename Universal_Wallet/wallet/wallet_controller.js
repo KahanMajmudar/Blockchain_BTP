@@ -20,7 +20,7 @@ import { WaletValidate } from './wallet_model'
 export class WalletController {
 
     /*
-     Strength               Word
+    | Strength              Word |
     |  128  |  4 |   132  |  12  |
     |  160  |  5 |   165  |  15  |
     |  192  |  6 |   198  |  18  |
@@ -84,11 +84,23 @@ export class WalletController {
 
     createBTCAcc = async(mnemonic, network_type) => {
 
+        const {error} = WaletValidate.create({mnemonic, network_type})
+        if(error) throw error
+
+        const isValid = bip39.validateMnemonic(mnemonic)
+        if (!isValid) return console.log('Invalid Mnemonic!!')
+
         const _seed = this.seed
         this.btc = new BTC(mnemonic, _seed, network_type)
     }
 
     createETHAcc = async(mnemonic) => {
+
+        const {error} = WaletValidate.create({mnemonic, network_type})
+        if(error) throw error
+
+        const isValid = bip39.validateMnemonic(mnemonic)
+        if (!isValid) return console.log('Invalid Mnemonic!!')
 
         const _seed = this.seed
         this.eth = new ETH(mnemonic, _seed)

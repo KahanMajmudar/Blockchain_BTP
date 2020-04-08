@@ -14,9 +14,10 @@ export class ETH {
     // #root
     // #mnemonic
 
-    constructor(_mnemonic, _seed) {
+    constructor(mnemonic, _seed, network_type) {
 
-        this.mnemonic = _mnemonic
+        this.mnemonic = mnemonic
+        this.network_type = network_type
         this.root = hdkey.fromMasterSeed(_seed)
         // return root
 
@@ -45,7 +46,7 @@ export class ETH {
 
     }
 
-    send = async (from_address_index, to_address, amount, network_type) => {
+    send = async (from_address_index, to_address, amount) => {
 
         const {
             address: from_address,
@@ -62,7 +63,7 @@ export class ETH {
         }
 
         const tx = new Tx.Transaction(txData, {
-            'chain': network_type === 'testnet' ? 'ropsten' : 'mainnet'
+            'chain': this.network_type === 'testnet' ? 'ropsten' : 'mainnet'
         }) //change this
         tx.sign(privateKey)
         const serializedTx = tx.serialize()
