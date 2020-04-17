@@ -1,6 +1,6 @@
-var CryptoZombies = artifacts.require('./CryptoZombies')
+// var CryptoZombies = artifacts.require('./CryptoZombies')
 
-export default function(deployer) {
+// export default function(deployer) {
 
-    deployer.deploy(CryptoZombies);
-};
+//     deployer.deploy(CryptoZombies);
+// };

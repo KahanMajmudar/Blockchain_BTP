@@ -1,6 +1,6 @@
 pragma solidity  >=0.5.0 <0.6.0;
 
-import "@openzeppelin/contracts/ownership/Ownable.sol";
+import "../node_modules/@openzeppelin/contracts/ownership/Ownable.sol";
 // import "../contracts/Ownable.sol";
 import "../contracts/SafeMath.sol";
 
