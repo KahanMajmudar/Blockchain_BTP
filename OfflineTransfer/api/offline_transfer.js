@@ -43,9 +43,9 @@ export class OfflineTransfer {
 
         const sender = req.body.sender
         const receiver = req.body.receiver
-        const valueEth = req.body.valueEth
+        const valueErc = req.body.valueErc
         const pk = req.body.pk
-        const result = await this.controller.sendERC20Online(sender, receiver, valueEth, pk)
+        const result = await this.controller.sendERC20Online(sender, receiver, valueErc, pk)
         res.send(result)
     }
 

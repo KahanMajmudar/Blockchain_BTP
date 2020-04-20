@@ -1,7 +1,7 @@
 import Web3 from "web3"
 import abi from "human-standard-token-abi"
 import { MailController } from '../services/mail/mail_controller'
-const infuraurl = 'https://ropsten.infura.io/v3/97efa768233d45adb57fd710520b7275'
+const infuraurl = 'https://ropsten.infura.io/v3/[key]'
 import * as Tx from 'ethereumjs-tx'
 const web3 = new Web3(
     new Web3.providers.HttpProvider(infuraurl)
@@ -87,7 +87,6 @@ export class OfflineTransferController {
 
         if (!this.tokenContract) return new Error('Token Contract not set!!')
 
-        const privateKey = pk
         const bn_amount =  web3.utils.toBN(tokenValue)
         const decimals = await this.tokenContract.methods.decimals().call()
         const amount_to_send = bn_amount.mul(web3.utils.toBN(10).pow(decimals))  //amt * 10^decimals
@@ -105,7 +104,7 @@ export class OfflineTransferController {
             }
 
             const tx = new Tx.Transaction(txData, {'chain': 'ropsten'})
-            tx.sign(privateKey)
+            tx.sign(pk)
             const serializedTx = tx.serialize()
             console.log(`0x${serializedTx.toString('hex')}`)
 
@@ -124,7 +123,7 @@ export class OfflineTransferController {
 
     sendERC20Online = async(sender, receiver, tokenValue, pk) => {
 
-        if (!this.tokenContract) return new Error('TOken Contract not set!!')
+        if (!this.tokenContract) return new Error('Token Contract not set!!')
 
         const bn_amount =  web3.utils.toBN(tokenValue)
         const decimals = await this.tokenContract.methods.decimals().call()
@@ -143,7 +142,7 @@ export class OfflineTransferController {
             }
 
             const tx = new Tx.Transaction(txData, {'chain': 'ropsten'})
-            tx.sign(privateKey)
+            tx.sign(pk)
             const serializedTx = tx.serialize()
             console.log(`0x${serializedTx.toString('hex')}`)
 

@@ -5,7 +5,7 @@ const offlineTransfer = new OfflineTransfer()
 
 router.post('/eth/offline', offlineTransfer.sendEthOffline)
 router.post('/eth/online', offlineTransfer.sendEthOnline)
-// router.post('/erc20/offline', user.updateUser)
-// router.post('/erc20/online', user.deleteUser)
+router.post('/erc20/offline', offlineTransfer.sendErc20Offline)
+router.post('/erc20/online', offlineTransfer.sendErc20Online)
 
 module.exports = router
