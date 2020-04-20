@@ -16,7 +16,6 @@ export class OfflineTransferController {
 
     sendEthOffline = async (sender, receiver, valueEth, pk, email) => {
 
-        const value = valueEth
         const privateKey = Buffer.from(pk, 'hex')
 
         try {
@@ -32,10 +31,11 @@ export class OfflineTransferController {
             const tx = new Tx.Transaction(txData, {'chain': 'ropsten'})
             tx.sign(privateKey)
             const serializedTx = tx.serialize()
-            console.log(`0x${serializedTx.toString('hex')}`)
+            const rawTx = `0x${serializedTx.toString('hex')}`
+            console.log(rawTx)
             const data = {
                 email: email,
-                txhash: `0x${serializedTx.toString('hex')}`
+                txhash: rawTx
             }
             const result = await this.sendMail(data)
             return result
@@ -64,12 +64,13 @@ export class OfflineTransferController {
             const tx = new Tx.Transaction(txData, {'chain': 'ropsten'})
             tx.sign(privateKey)
             const serializedTx = tx.serialize()
-            console.log(`0x${serializedTx.toString('hex')}`)
-            await web3.eth.sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
+            const rawTx = `0x${serializedTx.toString('hex')}`
+            console.log(rawTx)
+            await web3.eth.sendSignedTransaction(rawTx)
                 .on('receipt', console.log)
 
         } catch (error) {
-            return (error.message)
+            return error.message
 
         }
 
@@ -78,8 +79,9 @@ export class OfflineTransferController {
     setTokenContract = async(contractAddress) => {
 
         const token_address = contractAddress
-        this.tokenContract = await new web3.eth.Contract(abi, token_address)
-        if (this.tokenContract) return "Success!!"
+        this.tokenContract = new web3.eth.Contract(abi, token_address)
+        console.log(this.tokenContract)
+        if (this.tokenContract._address) return "Success!!"
         else return "Failed!!"
     }
 
@@ -96,8 +98,8 @@ export class OfflineTransferController {
             const txData = {
                 from: sender,
                 nonce: nonce,
-                to: this.tokenContract,
-                value: web3.utils.numberToHex(web3.utils.toWei(value, 'ether')),
+                to: this.tokenContract._address,
+                value: 0x0,
                 gasPrice: web3.utils.toHex(web3.utils.toWei('2', 'Gwei')),
                 gasLimit: web3.utils.toHex('3000000'),
                 data: this.tokenContract.methods.transfer(receiver, amount_to_send).encodeABI()
@@ -106,11 +108,12 @@ export class OfflineTransferController {
             const tx = new Tx.Transaction(txData, {'chain': 'ropsten'})
             tx.sign(pk)
             const serializedTx = tx.serialize()
-            console.log(`0x${serializedTx.toString('hex')}`)
+            const rawTx = `0x${serializedTx.toString('hex')}`
+            console.log(rawTx)
 
             const data = {
                 email: email,
-                txhash: `0x${serializedTx.toString('hex')}`
+                txhash: rawTx
             }
             const result = await this.sendMail(data)
             return result
@@ -134,8 +137,8 @@ export class OfflineTransferController {
             const txData = {
                 from: sender,
                 nonce: nonce,
-                to: this.tokenContract,
-                value: web3.utils.numberToHex(web3.utils.toWei(value, 'ether')),
+                to: this.tokenContract._address,
+                value: 0x0,
                 gasPrice: web3.utils.toHex(web3.utils.toWei('2', 'Gwei')),
                 gasLimit: web3.utils.toHex('3000000'),
                 data: this.tokenContract.methods.transfer(receiver, amount_to_send).encodeABI()
@@ -144,9 +147,10 @@ export class OfflineTransferController {
             const tx = new Tx.Transaction(txData, {'chain': 'ropsten'})
             tx.sign(pk)
             const serializedTx = tx.serialize()
-            console.log(`0x${serializedTx.toString('hex')}`)
+            const rawTx = `0x${serializedTx.toString('hex')}`
+            console.log(rawTx)
 
-            await web3.eth.sendSignedTransaction(`0x${serializedTx.toString('hex')}`)
+            await web3.eth.sendSignedTransaction(rawTx)
                 .on('receipt', console.log)
 
         } catch (error) {
@@ -160,6 +164,11 @@ export class OfflineTransferController {
         const mail_controller = new MailController()
         const result = await mail_controller.send(data)
         return result
+    }
+
+    sendRawTx = async(data) => {
+        await web3.eth.sendSignedTransaction(data)
+            .on('receipt', console.log)
     }
 
 

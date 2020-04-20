@@ -34,6 +34,7 @@ export class OfflineTransfer {
         const valueErc = req.body.valueErc
         const pk = req.body.pk
         const email = req.body.email
+        console.log('HERE-------------------')
         const result = await this.controller.sendERC20Offline(sender, receiver, valueErc, pk, email)
         res.send(result)
 
@@ -46,6 +47,13 @@ export class OfflineTransfer {
         const valueErc = req.body.valueErc
         const pk = req.body.pk
         const result = await this.controller.sendERC20Online(sender, receiver, valueErc, pk)
+        res.send(result)
+    }
+
+    setTokenContract = async(req, res) => {
+
+        const address = req.body.contractAddress
+        const result = await this.controller.setTokenContract(address)
         res.send(result)
     }
 
