@@ -31,11 +31,8 @@ export class OracleController {
     //     else return "Failed!!"
     // }
 
-
-    requestRandomNumber = async() => {
-        try {
-
-            // const { events: { LogNewProvableQuery: { blockNumber }, LogQueryId: { returnValues: { queryID } } } } = await this.tokenContract.methods.getRandomNumber().send({
+    // demo = async() => {
+        // const { events: { LogNewProvableQuery: { blockNumber }, LogQueryId: { returnValues: { queryID } } } } = await this.tokenContract.methods.getRandomNumber().send({
             //     from: '0x89ced5229F2D31ED1eF4F7035162f0BaFdeF68c6',
             //     // value: web3.utils.toHex(web3.utils.toWei('0.005', 'ether')),
             //     gas: '2000000'
@@ -53,6 +50,11 @@ export class OracleController {
             // console.log(result)
             // console.log(returnValues.description)
             // return returnValues.description
+    // }
+
+
+    requestRandomNumber = async() => {
+        try {
             const {
                 events: {
                     LogNewProvableQuery: {
@@ -62,7 +64,7 @@ export class OracleController {
                     },
                     LogQueryId: {
                         returnValues: {
-                             queryID
+                            queryID
                         }
                     } = { returnValues: { queryID: null } }
                 }
@@ -91,7 +93,7 @@ export class OracleController {
                     },
                     LogQueryId: {
                         returnValues: {
-                             queryID
+                            queryID
                         }
                     } = { returnValues: { queryID: null } }
                 }
@@ -121,7 +123,7 @@ export class OracleController {
                     },
                     LogQueryId: {
                         returnValues: {
-                             queryID
+                            queryID
                         }
                     } = { returnValues: { queryID: null } }
                 }
